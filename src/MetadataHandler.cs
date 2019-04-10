@@ -13,7 +13,7 @@ namespace Landis.Extension.RootRot
         
         public static ExtensionMetadata Extension {get; set;}
 
-        public static void InitializeMetadata(int Timestep, string MapFileName, ICore mCore, string LogFileName)
+        public static void InitializeMetadata(IInputParameters parameters, ICore mCore)
         {
             ScenarioReplicationMetadata scenRep = new ScenarioReplicationMetadata() {
                 RasterOutCellArea = PlugIn.ModelCore.CellArea,
@@ -24,7 +24,7 @@ namespace Landis.Extension.RootRot
 
             Extension = new ExtensionMetadata(mCore){
                 Name = PlugIn.ExtensionName,
-                TimeInterval = Timestep, 
+                TimeInterval = parameters.Timestep, 
                 ScenarioReplicationMetadata = scenRep
             };
 
@@ -32,19 +32,29 @@ namespace Landis.Extension.RootRot
             //          table outputs:   
             //---------------------------------------
 
-            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(LogFileName));
-            PlugIn.eventLog = new MetadataTable<EventsLog>(LogFileName);
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(parameters.EventLogFileName));
+            PlugIn.eventLog = new MetadataTable<EventsLog>(parameters.EventLogFileName);
+            PlugIn.summaryLog = new MetadataTable<SummaryLog>(parameters.SummaryLogFileName);
 
             OutputMetadata tblOut_events = new OutputMetadata()
             {
                 Type = OutputType.Table,
-                Name = "WindLog",
+                Name = "RootRotEventLog",
                 FilePath = PlugIn.eventLog.FilePath,
                 Visualize = false,
             };
             tblOut_events.RetriveFields(typeof(EventsLog));
             Extension.OutputMetadatas.Add(tblOut_events);
 
+            OutputMetadata tblOut_summary = new OutputMetadata()
+            {
+                Type = OutputType.Table,
+                Name = "RootRotSummaryLog",
+                FilePath = PlugIn.summaryLog.FilePath,
+                Visualize = false,
+            };
+            tblOut_summary.RetriveFields(typeof(SummaryLog));
+            Extension.OutputMetadatas.Add(tblOut_summary);
 
             //---------------------------------------            
             //          map outputs:         
@@ -54,7 +64,7 @@ namespace Landis.Extension.RootRot
             {
                 Type = OutputType.Map,
                 Name = "severity",
-                FilePath = @MapFileName,
+                FilePath = @parameters.OutMapNamesTemplate,
                 Map_DataType = MapDataType.Ordinal,
                 Map_Unit = FieldUnits.Severity_Rank,
                 Visualize = true,

@@ -7,6 +7,7 @@ using Landis.Library.Metadata;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using Landis.Utilities;
 
 namespace Landis.Extension.RootRot
 {
@@ -19,16 +20,15 @@ namespace Landis.Extension.RootRot
     {
         public static readonly ExtensionType ExtType = new ExtensionType("disturbance:pathogen");
         public static MetadataTable<EventsLog> eventLog;
+        public static MetadataTable<SummaryLog> summaryLog;
 
         public static readonly string ExtensionName = "Root Rot";
         
-        private string mapNameTemplate;
-        private string intensityMapNameTemplate;
-        private string tolwMapNameTemplate;
+        private string outMapNameTemplate;
+        private string tolpMapNameTemplate;
         //private StreamWriter log;
         private IInputParameters parameters;
         private static ICore modelCore;
-        private bool reinitialized;
 
         //---------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ namespace Landis.Extension.RootRot
         {
             modelCore = mCore;
             InputParameterParser parser = new InputParameterParser();
-            parameters = Landis.Data.Load<IInputParameters>(dataFile, parser);
+            parameters = Landis.Data.Load<InputParameters>(dataFile, parser);
         }
         //---------------------------------------------------------------------
 
@@ -68,28 +68,20 @@ namespace Landis.Extension.RootRot
         /// </param>
         public override void Initialize()
         {
-            reinitialized = false;
-            MetadataHandler.InitializeMetadata(parameters.Timestep, parameters.MapNamesTemplate, ModelCore, parameters.LogFileName);
+            MetadataHandler.InitializeMetadata(parameters, ModelCore);
 
             Timestep = parameters.Timestep;
-            mapNameTemplate = parameters.MapNamesTemplate;
-            intensityMapNameTemplate = parameters.IntensityMapNamesTemplate;
-            tolwMapNameTemplate = "linearwind/tolw-{timestep}.img";
+            outMapNameTemplate = parameters.OutMapNamesTemplate;
+            tolpMapNameTemplate = parameters.TOLPMapNamesTemplate;
 
             SiteVars.Initialize();
 
-            Event.Initialize(parameters.WindSeverities);
+            //Event.Initialize(parameters.WindSeverities);
 
             //ModelCore.UI.WriteLine("   Opening wind log file \"{0}\" ...", parameters.LogFileName);
             //log = Landis.Data.CreateTextFile(parameters.LogFileName);
             //log.AutoFlush = true;
             //log.WriteLine("Time,Initiation Site,Total Sites,Damaged Sites,Cohorts Killed,Mean Severity");
-        }
-        //---------------------------------------------------------------------
-        public new void InitializePhase2()
-        {
-            SiteVars.ReInitialize();
-            reinitialized = true;
         }
 
         //---------------------------------------------------------------------
@@ -99,13 +91,11 @@ namespace Landis.Extension.RootRot
         ///</summary>
         public override void Run()
         {
-            ModelCore.UI.WriteLine("Processing landscape for wind events ...");
-            if (!reinitialized)
-                InitializePhase2();
+            ModelCore.UI.WriteLine("Processing landscape for root rot ...");
 
-            SiteVars.Event.SiteValues = null;
-            SiteVars.Severity.ActiveSiteValues = 0;
-            SiteVars.Intensity.ActiveSiteValues = 0;
+            //SiteVars.Event.SiteValues = null;
+            //SiteVars.Severity.ActiveSiteValues = 0;
+            //SiteVars.Intensity.ActiveSiteValues = 0;
 
             int eventCount = 0;
 

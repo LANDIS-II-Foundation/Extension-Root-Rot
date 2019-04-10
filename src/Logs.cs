@@ -11,7 +11,7 @@ namespace Landis.Extension.RootRot
         //log.WriteLine("Time,Initiation Site,Total Sites,Damaged Sites,Cohorts Killed,Mean Severity");
 
         [DataFieldAttribute(Unit = FieldUnits.Year, Desc = "...")]
-        public int Time {set; get;}
+        public int Time { set; get; }
 
         [DataFieldAttribute(Desc = "Initiation Row")]
         public int InitRow { set; get; }
@@ -49,8 +49,23 @@ namespace Landis.Extension.RootRot
         [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Number of Cohorts Killed")]
         public int CohortsKilled { set; get; }
 
-        [DataFieldAttribute(Unit = FieldUnits.Severity_Rank, Desc = "Mean Severity (1-5)", Format="0.00")]
+        [DataFieldAttribute(Unit = FieldUnits.Severity_Rank, Desc = "Mean Severity (1-5)", Format = "0.00")]
         public double MeanSeverity { set; get; }
 
+    }
+
+    public class SummaryLog
+    {
+        [DataFieldAttribute(Unit = FieldUnits.Year, Desc = "...")]
+        public int Time { set; get; }
+
+        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Sites Infected")]
+        public double InfectedSites { set; get; }
+
+        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Sites Diseased")]
+        public double DiseasedSites { set; get; }
+
+        [DataFieldAttribute(Unit = FieldUnits.g_B_m2, Desc = "Mortality Biomass")]
+        public double MortalityBiomass { set; get; }
     }
 }
