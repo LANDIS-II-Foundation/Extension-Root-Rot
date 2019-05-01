@@ -8,6 +8,10 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using Landis.Utilities;
+using Landis.Library.Climate;
+using System.Linq;
+//using Landis.Library.Cohorts;
+using Landis.Library.BiomassCohorts;
 
 namespace Landis.Extension.RootRot
 {
@@ -27,8 +31,9 @@ namespace Landis.Extension.RootRot
         private string outMapNameTemplate;
         private string tolpMapNameTemplate;
         //private StreamWriter log;
-        private IInputParameters parameters;
+        public static IInputParameters Parameters;
         private static ICore modelCore;
+        public static int ActualYear;
 
         //---------------------------------------------------------------------
 
@@ -52,7 +57,7 @@ namespace Landis.Extension.RootRot
         {
             modelCore = mCore;
             InputParameterParser parser = new InputParameterParser();
-            parameters = Landis.Data.Load<InputParameters>(dataFile, parser);
+            Parameters = Landis.Data.Load<IInputParameters>(dataFile, parser);
         }
         //---------------------------------------------------------------------
 
@@ -68,13 +73,13 @@ namespace Landis.Extension.RootRot
         /// </param>
         public override void Initialize()
         {
-            MetadataHandler.InitializeMetadata(parameters, ModelCore);
+            MetadataHandler.InitializeMetadata(Parameters, ModelCore);
 
-            Timestep = parameters.Timestep;
-            outMapNameTemplate = parameters.OutMapNamesTemplate;
-            tolpMapNameTemplate = parameters.TOLPMapNamesTemplate;
+            Timestep = Parameters.Timestep;
+            outMapNameTemplate = Parameters.OutMapNamesTemplate;
+            tolpMapNameTemplate = Parameters.TOLPMapNamesTemplate;
 
-            SiteVars.Initialize();
+            SiteVars.Initialize(Parameters.InputMapName);
 
             //Event.Initialize(parameters.WindSeverities);
 
@@ -93,69 +98,169 @@ namespace Landis.Extension.RootRot
         {
             ModelCore.UI.WriteLine("Processing landscape for root rot ...");
 
-            //SiteVars.Event.SiteValues = null;
-            //SiteVars.Severity.ActiveSiteValues = 0;
-            //SiteVars.Intensity.ActiveSiteValues = 0;
-
-            int eventCount = 0;
-
-            ModelCore.NormalDistribution.Mu = parameters.NumEventsMean;
-            ModelCore.NormalDistribution.Sigma = parameters.NumEventsStDev;
-            double numEvents = ModelCore.NormalDistribution.NextDouble();
-            numEvents = ModelCore.NormalDistribution.NextDouble();
-
-            // units of numEvents is per year per 40000km2 - convert by timestep and landscape/cell size
-            double numEventsTimestep = numEvents * Timestep;
-            double numEventsKM = numEventsTimestep / 40000;
-            //double landscapeKM = ModelCore.Landscape.ActiveSiteCount * (PlugIn.ModelCore.CellLength * PlugIn.ModelCore.CellLength) / (1000 * 1000);
-            double landscapeKM = ModelCore.Landscape.SiteCount * (PlugIn.ModelCore.CellLength * PlugIn.ModelCore.CellLength) / (1000 * 1000);
-            double totalEvents = numEventsKM * landscapeKM;
-            double siteProbability = totalEvents / PlugIn.ModelCore.Landscape.ActiveSiteCount;
-
-            
-            foreach (ActiveSite site in ModelCore.Landscape.ActiveSites) {
-       
-                    Event windEvent = Event.Initiate(site, siteProbability, parameters);
-                    if (windEvent != null)
-                    {
-                        LogEvent(ModelCore.CurrentTime, windEvent);
-                        eventCount++;
-                    }
-                
-            }
-            ModelCore.UI.WriteLine("  Wind events: {0}", eventCount);
-
-            string path = "";
-            Dimensions dimensions = new Dimensions(ModelCore.Landscape.Rows, ModelCore.Landscape.Columns);
-            //  Write wind severity map
-            if (mapNameTemplate != null)
+            ActualYear = 0;
+            try
             {
-                path = MapNames.ReplaceTemplateVars(mapNameTemplate, ModelCore.CurrentTime);
-                using (IOutputRaster<BytePixel> outputRaster = ModelCore.CreateRaster<BytePixel>(path, dimensions))
+                ActualYear = (PlugIn.ModelCore.CurrentTime - 1) + Climate.Future_AllData.First().Key;
+            }
+            catch
+            {
+                throw new UninitializedClimateData(string.Format("Could not initilize the actual year {0} from climate data", ActualYear));
+            }
+
+            // new Event for each timestep
+            Event newEvent = new Event();
+
+            /*Dictionary<IEcoregion, float> ecoMinTemp = new Dictionary<IEcoregion, float>();
+            foreach (IEcoregion ecoregion in PlugIn.ModelCore.Ecoregions)
+            {
+                if (ecoregion.Active)
                 {
-                    BytePixel pixel = outputRaster.BufferPixel;
-                    foreach (Site site in ModelCore.Landscape.AllSites)
+                    List<float> annualMinTemp = new List<float>();
+                    foreach (int year in Enumerable.Range(ActualYear - (Timestep - 1), Timestep))
                     {
-                        if (site.IsActive)
+                        float tempSum = 0;
+                        foreach (int m in Enumerable.Range(0, 12))
                         {
-                            if (SiteVars.Disturbed[site])
-                                pixel.MapCode.Value = (byte)(SiteVars.Severity[site] + 1);
+                            double tmin = Climate.Future_MonthlyData[year][ecoregion.Index].MonthlyMinTemp[m];
+                            tempSum += (float)tmin;
+                        }
+                        float annualAvg = tempSum / 12;
+                        annualMinTemp.Add(annualAvg);
+                    }
+                    float ecoAvg = annualMinTemp.Average();
+                    ecoMinTemp[ecoregion] = ecoAvg;
+                }
+            }*/
+
+            foreach (ActiveSite site in ModelCore.Landscape.ActiveSites)
+            {
+                int status = SiteVars.Status[site];
+                float pressureHead = SiteVars.PressureHead[site];
+
+                int newStatus = status;
+                if (status > 0) // Status 0 = Nonactive, not processed
+                {
+                    IEcoregion ecoregion = PlugIn.ModelCore.Ecoregion[site];
+                    //float tmin = ecoMinTemp[ecoregion];
+                    float tmin = SiteVars.ExtremeMinTemp[site];
+                    float dTemp = (tmin - Parameters.LethalTemp) / Math.Abs(Parameters.LethalTemp);
+                    dTemp = Math.Min(dTemp, 1);
+                    dTemp = Math.Max(dTemp, 0);
+                    
+                    bool presence = (status > 1);
+                    if (dTemp < PlugIn.ModelCore.GenerateUniform())
+                    {
+                        presence = false;
+                        newStatus = 1;  // If Presence == 0, site transitions to Susceptible (S) regardless of current state 
+                    }
+                    else  // If Presence == 1, other transitions are possible based on Conducive Environment
+                    {
+                        presence = true;
+                        float pSI = 0;
+                        //float pSD = 0;
+                        float pID = 0;
+                        //float pIS = 0;
+                        float pDI = 0;
+                        //float pDS = 0;
+                        if (status == 3) // Site currently Diseased (D) can transition to Susceptible (S) or Infected (I)
+                        {
+                            // probability of D converting to S only based on presenece - handled above
+
+                            // probability of D converting to I (pDI)
+                            float maxSusceptibility = 0;
+
+                            foreach (ISpeciesCohorts speciesCohorts in SiteVars.Cohorts[site])
+                            {
+                                foreach (ICohort cohort in speciesCohorts)
+                                {
+                                    float speciesSuscept = Parameters.SusceptibilityTable[cohort.Species];
+                                    if (speciesSuscept > maxSusceptibility)
+                                    {
+                                        maxSusceptibility = speciesSuscept;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            if (maxSusceptibility == 0)
+                                pDI = 1;
                             else
-                                pixel.MapCode.Value = 1;
+                            {
+                                float m2 = (float) (1.0 / (((Parameters.PhDry - Parameters.PhWet)/ 2.0) - Parameters.PhWet));
+                                float b2 = (float) -1.0 * Parameters.PhWet * m2;
+                                float m3 = (float) (1.0 / ((Parameters.PhDry - Parameters.PhWet) / 2.0 - Parameters.PhDry));
+                                float b3 = (float) -1.0 * Parameters.PhDry * m3;
+                                if (pressureHead < Parameters.PhWet)
+                                    pDI = 0;
+                                else if (pressureHead > Parameters.PhDry)
+                                    pDI = 0;
+                                else if (pressureHead <= (Parameters.PhDry - Parameters.PhWet) / 2)
+                                    pDI = m2 * pressureHead + b2;
+                                else
+                                    pDI = m3 * pressureHead + b3;
+                                pDI = Math.Min(pDI, Parameters.MaxProbDI);
+                            }
+                            if(pDI < PlugIn.ModelCore.GenerateUniform())
+                            {
+                                newStatus = 2;
+                            }
                         }
-                        else
+
+                        else if (status == 2)  // Site currently Infected (I) can transition to Diseased (D) or Susceptible (S)
                         {
-                            //  Inactive site
-                            pixel.MapCode.Value = 0;
+                            // probability of I converting to S only based on presenece - handled above
+
+                            // probability of I converting to D
+                            pID = Calc_pID(Parameters, pressureHead);
+                            if (pID < PlugIn.ModelCore.GenerateUniform())
+                            {
+                                newStatus = 3;
+                            }
                         }
-                        outputRaster.WriteBufferPixel();
+                        else if (status == 1)  // Site currently Susceptible (S) can transition to Infected (I) or Diseased (D)
+                        {
+                            // probability of S converting to I
+                            if (pressureHead < Parameters.PhWet)
+                                pSI = (float)-1.0 / Parameters.PhWet * pressureHead + 1;
+                            else
+                                pSI = 0;
+                            if (pSI < PlugIn.ModelCore.GenerateUniform())
+                            {
+                                // probability of S converting to D is contingent on S converting to I
+                                pID = Calc_pID(Parameters, pressureHead);
+                                if (pID < PlugIn.ModelCore.GenerateUniform())                             
+                                    newStatus = 3;                                
+                                else
+                                    newStatus = 2;
+                            }
+                        }
+                    }
+                    if (newStatus == 2) // Infected
+                        newEvent.InfectedSites += 1;
+                    if(newStatus == 3) // Diseased - can cause damage
+                    {
+                        newEvent.DiseasedSites += 1;
+                        int damage = SiteVars.Cohorts[site].ReduceOrKillBiomassCohorts(newEvent);
+                        if(damage > 0)
+                        {
+                            newEvent.TotalSitesDamaged += 1;
+                        }
+                        SiteVars.TimeOfLastDisease[site] = PlugIn.ModelCore.CurrentTime;
                     }
                 }
+                SiteVars.Status[site] = newStatus;
             }
-            //  Write wind intensity map
-            if (intensityMapNameTemplate != null)
+            // Write logs
+            LogEvent(PlugIn.ModelCore.CurrentTime, newEvent);
+
+            // Write output maps
+            string path = "";
+            Dimensions dimensions = new Dimensions(ModelCore.Landscape.Rows, ModelCore.Landscape.Columns);
+            //  Write Pathogen Status map
+            if (outMapNameTemplate != null)
             {
-                path = MapNames.ReplaceTemplateVars(intensityMapNameTemplate, ModelCore.CurrentTime);
+                path = MapNames.ReplaceTemplateVars(outMapNameTemplate, ModelCore.CurrentTime);
                 using (IOutputRaster<IntPixel> outputRaster = ModelCore.CreateRaster<IntPixel>(path, dimensions))
                 {
                     IntPixel pixel = outputRaster.BufferPixel;
@@ -163,8 +268,7 @@ namespace Landis.Extension.RootRot
                     {
                         if (site.IsActive)
                         {
-                            pixel.MapCode.Value = (int)(SiteVars.Intensity[site] * 100);
-
+                                pixel.MapCode.Value = (int)(SiteVars.Status[site]);                            
                         }
                         else
                         {
@@ -175,8 +279,8 @@ namespace Landis.Extension.RootRot
                     }
                 }
             }
-            /*//  Write time of last wind map
-            path = MapNames.ReplaceTemplateVars(tolwMapNameTemplate, ModelCore.CurrentTime);
+            //  Write Time of Last Pathogen map
+            path = MapNames.ReplaceTemplateVars(tolpMapNameTemplate, ModelCore.CurrentTime);
             using (IOutputRaster<IntPixel> outputRaster = ModelCore.CreateRaster<IntPixel>(path, dimensions))
             {
                 IntPixel pixel = outputRaster.BufferPixel;
@@ -184,7 +288,7 @@ namespace Landis.Extension.RootRot
                 {
                     if (site.IsActive)
                     {
-                        pixel.MapCode.Value = (int)(SiteVars.TimeOfLastEvent[site]);
+                        pixel.MapCode.Value = (int)(SiteVars.TimeOfLastDisease[site]);
 
                     }
                     else
@@ -195,45 +299,54 @@ namespace Landis.Extension.RootRot
                     outputRaster.WriteBufferPixel();
                 }
             }
-             * */
-        }
+            
 
+        }
+        private static float Calc_pID(IInputParameters parameters, float pressureHead)
+        {
+            float pID = 0;
+            float m1 = (float)(1.0 - parameters.MinProbID) / (parameters.PhMax - parameters.PhDry);
+            float b1 = (float)(parameters.MinProbID - (1.0 * parameters.PhDry * m1));
+            if (pressureHead < parameters.PhWet)
+                pID = (float)((parameters.MinProbID - 1.0) / parameters.PhWet * pressureHead + 1.0);
+            else if (pressureHead > parameters.PhDry)
+                if (pressureHead > parameters.PhMax)
+                    pID = 1;
+                else
+                    pID = m1 * pressureHead + b1;
+            else
+                pID = parameters.MinProbID;
+            return pID;
+
+        }
         //---------------------------------------------------------------------
 
-        private void LogEvent(int   currentTime,
-                              Event windEvent)
+        private void LogEvent(int currentTime,
+                              Event diseaseEvent)
         {
-            //log.WriteLine("{0},\"{1}\",{2},{3},{4},{5:0.0}",
-            //              currentTime,
-            //              windEvent.StartLocation,
-            //              windEvent.Size,
-            //              windEvent.SitesDamaged,
-            //              windEvent.CohortsKilled,
-            //              windEvent.Severity);
-
             eventLog.Clear();
             EventsLog el = new EventsLog();
             el.Time = currentTime;
-            el.InitRow = windEvent.StartLocation.Row;
-            el.InitColumn = windEvent.StartLocation.Column;
-            el.Type = windEvent.Type;
-            el.TotalSites = windEvent.SitesInEvent;
-            el.DamageSites = windEvent.SitesDamaged;
-            el.TotalArea = windEvent.SizeHectares;
-            el.DamagedArea = windEvent.SitesDamaged * (PlugIn.ModelCore.CellLength * PlugIn.ModelCore.CellLength) / 10000;
-            el.CohortsKilled = windEvent.CohortsKilled;
-            el.MeanSeverity = windEvent.Severity;
-            el.Intensity = windEvent.Intensity;
-            el.Direction = windEvent.WindDirection;
-            el.Length = windEvent.Length;
-            el.Width = windEvent.Width;
-
+            el.DamageSites = diseaseEvent.TotalSitesDamaged;
+            el.CohortsDamaged = diseaseEvent.CohortsDamaged;
+            el.CohortsKilled = diseaseEvent.CohortsKilled;
+            el.MortalityBiomass = diseaseEvent.BiomassRemoved;
 
             eventLog.AddObject(el);
             eventLog.WriteToFile();
 
+
+            summaryLog.Clear();
+            SummaryLog sl = new SummaryLog();
+            sl.Time = currentTime;
+            sl.InfectedSites = diseaseEvent.InfectedSites;
+            sl.DiseasedSites = diseaseEvent.DiseasedSites;
+            sl.MortalityBiomass = diseaseEvent.BiomassRemoved;
+
+            summaryLog.AddObject(sl);
+            summaryLog.WriteToFile();
         }
 
 
-    }
+        }
 }

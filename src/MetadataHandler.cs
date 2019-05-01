@@ -60,16 +60,16 @@ namespace Landis.Extension.RootRot
             //          map outputs:         
             //---------------------------------------
 
-            OutputMetadata mapOut_Severity = new OutputMetadata()
+            OutputMetadata mapOut_Status = new OutputMetadata()
             {
                 Type = OutputType.Map,
-                Name = "severity",
+                Name = "status",
                 FilePath = @parameters.OutMapNamesTemplate,
                 Map_DataType = MapDataType.Ordinal,
                 Map_Unit = FieldUnits.Severity_Rank,
                 Visualize = true,
             };
-            Extension.OutputMetadatas.Add(mapOut_Severity);
+            Extension.OutputMetadatas.Add(mapOut_Status);
 
             //---------------------------------------
             MetadataProvider mp = new MetadataProvider(Extension);

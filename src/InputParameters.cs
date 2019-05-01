@@ -46,8 +46,8 @@ namespace Landis.Extension.RootRot
             { return inputMapFileName; }
             set
             {
-                if (value == null)
-                    throw new InputValueException(value.ToString(), "Value must be a file path.");
+                //if (value == null)
+                 //   throw new InputValueException(value.ToString(), "Value must be a file path.");
                 inputMapFileName = value;
             }
         }

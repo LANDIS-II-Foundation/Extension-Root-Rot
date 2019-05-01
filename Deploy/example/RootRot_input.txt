@@ -2,7 +2,7 @@ LandisData	"Root Rot"
 
 Timestep	5
 
-InputMap	rootrot_init_map.img << Optional
+>>InputMap	rootrot_init_map.img << Optional
 
 SpeciesSusceptibility
 pinustro	0.5

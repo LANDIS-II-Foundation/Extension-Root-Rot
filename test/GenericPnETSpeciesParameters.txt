@@ -1,0 +1,15 @@
+LandisData PnETGenericParameters
+PnETGenericParameters 		Value
+MaxCanopyLayers			2
+MaxDevLyrAv 			6000
+>>WUEcnst				10.9
+IMAX				5
+DNSC				0.05 <<target NSCfraction
+MaintResp			0.002
+FracBelowG			0.33
+PrecipEvents			11
+PreventEstablishment		false
+Wythers				true
+DTEMP				true
+Permafrost			false
+LeakageFrostDepth  		3000

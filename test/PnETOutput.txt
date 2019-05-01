@@ -1,0 +1,23 @@
+LandisData	PNEToutputsites
+
+>>PNEToutputsites	MapCoordinatesX	MapCoordinatesY	MapCoordinatesMaxX	MapCoordinatesMaxY	
+>>----------------------------------------------------------------------------------------
+>>Site1		715,187.037 4,413,258.694	734284.375 4413934	
+ 
+
+PNEToutputsites	Row	Column	
+>>----------------------------------------------------------------------------------------
+Site1	241	828	<<aspen
+Site2	901	1061	<<MxdHdwd
+Site3	25	227	<<NH
+Site4	309	1115	<<Jack pine
+Site5	690	451	<<Red pine
+Site6	819	718	<<White pine
+Site7	429	800	<<Oaks
+Site8	28	156	<<Spruce-fir
+Site9	313	758	<<W birch
+Site10	748	1090	<<Lowl conif
+Site11	113	150	<<MUCK
+Site12	886	1183	<<LowHdwd
+
+

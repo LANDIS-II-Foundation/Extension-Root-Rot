@@ -1,0 +1,12 @@
+LandisData  Ecoregions
+
+>>         	Map
+>> 	Active 	Code	Name	Description
+>> 	------ 	----	-----	-----------
+	no	0	eco0	"inactive"
+	yes	1	eco1	"LOAM"
+	yes	2	eco2	"LOSA"
+	yes	3	eco3	"SAND"
+	yes	4	eco4	"SALO"
+	yes	5	eco5	"SILO"
+	yes	10	woodywet	"lowland"

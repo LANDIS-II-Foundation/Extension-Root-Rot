@@ -1,0 +1,22 @@
+LandisData  "PnET-Succession"											
+											
+PnET-Succession		Value											
+>>-----------------------------										
+Timestep  5	
+StartYear	2010										
+										
+SeedingAlgorithm  WardSeedDispersal											
+											
+Latitude	45										
+
+>>PNEToutputsites		../PnETOutput.txt
+
+InitialCommunities      ../Oconto_landscape_initial-communities_122118_2ages.txt 										
+InitialCommunitiesMap   Oconto_landscape_InitComm_clip.img
+PnETGenericParameters	../GenericPnETSpeciesParameters.txt
+PnETSpeciesParameters	../LandscapeExpt-PnET_Oconto_Species.txt
+EcoregionParameters	../Oconto_landscape_ecoregionparameters.txt											
+
+ClimateConfigFile	../ClimateConfigFile_RCP2_6.txt
+
+SaxtonAndRawlsParameters	../SaxtonAndRawlsParameters-Copy.txt

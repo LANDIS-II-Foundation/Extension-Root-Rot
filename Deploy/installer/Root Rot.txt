@@ -1,0 +1,9 @@
+LandisData   Extension
+
+Name         "Root Rot"
+Version      "0.1 (alpha release 3)"
+Type         output
+Assembly     Landis.Extension.RootRot
+Class        Landis.Extension.RootRot.PlugIn
+Description  "Root Rot"
+CoreVersion  7.0
