@@ -79,6 +79,11 @@ namespace Landis.Extension.RootRot
             outMapNameTemplate = Parameters.OutMapNamesTemplate;
             tolpMapNameTemplate = Parameters.TOLPMapNamesTemplate;
 
+            if(Climate.Future_AllData == null)
+            {
+                throw new UninitializedClimateData(string.Format("Could not find Climate Library data.  Root Rot extension requires the use of the Climate Library."));
+            }
+
             SiteVars.Initialize(Parameters.InputMapName);
 
             //Event.Initialize(parameters.WindSeverities);
