@@ -14,9 +14,11 @@ namespace Landis.Extension.RootRot
         public int TotalSitesDamaged;
         public int CohortsDamaged;
         public int BiomassRemoved;
+        public List<int> BiomassRemovedList;
         public int CohortsKilled;
         public int InfectedSites;
         public int DiseasedSites;
+        public float LethalTemp;
 
         //---------------------------------------------------------------------
         ExtensionType IDisturbance.Type
@@ -40,10 +42,16 @@ namespace Landis.Extension.RootRot
         {
             this.CohortsDamaged = 0;
             this.BiomassRemoved = 0;
+            this.BiomassRemovedList = new List<int>(PlugIn.ModelCore.Species.Count);
+            foreach(ISpecies spc in PlugIn.ModelCore.Species)
+            {
+                this.BiomassRemovedList.Add(0);
+            }
             this.CohortsKilled = 0;
             this.TotalSitesDamaged = 0;
             this.InfectedSites = 0;
             this.DiseasedSites = 0;
+            this.LethalTemp = 0;
         }
         //---------------------------------------------------------------------
         //  A filter to determine which cohorts are removed.
@@ -54,6 +62,7 @@ namespace Landis.Extension.RootRot
             {
                 int biomassReduction = (int)Math.Round(speciesSuscept * cohort.Biomass);
                 BiomassRemoved += biomassReduction;
+                BiomassRemovedList[cohort.Species.Index] = BiomassRemovedList[cohort.Species.Index] + biomassReduction;
                 if (biomassReduction == cohort.Biomass)
                     CohortsKilled += 1;
                 else

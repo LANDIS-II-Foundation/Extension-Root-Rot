@@ -106,6 +106,12 @@ namespace Landis.Extension.RootRot
             else
                 parameters.TOLPMapNamesTemplate = null;
 
+            InputVar<string> lethalTempMapName = new InputVar<string>("LethalTempMapName");
+            if (ReadOptionalVar(lethalTempMapName))
+                parameters.LethalTempMapNameTemplate = lethalTempMapName.Value;
+            else
+                parameters.LethalTempMapNameTemplate = null;
+
             InputVar<string> eventLogFile = new InputVar<string>("EventLog");
             if (ReadOptionalVar(eventLogFile))
                 parameters.EventLogFileName = eventLogFile.Value;

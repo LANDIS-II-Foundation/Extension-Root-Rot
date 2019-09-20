@@ -47,6 +47,7 @@ MaxProbDI	0.85
 
 OutputMapName	"RootRot/RootRot-{timestep}.img"
 TOLPMapName	"RootRot/TOLP-{timestep}.img"
+LethalTempMapName	"RootRot/LethalTemp-{timestep}.img"
 
 EventLog	"RootRot/RootRot-events.csv"
 SummaryLog	"RootRot/RootRot-summary.csv"

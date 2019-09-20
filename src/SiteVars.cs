@@ -12,11 +12,13 @@ namespace Landis.Extension.RootRot
         private static ISiteVar<ISiteCohorts> cohorts;
         private static ISiteVar<float> pressureHead;
         private static ISiteVar<float> extremeMinTemp;
+        private static ISiteVar<int> lethalTemp;
 
         //---------------------------------------------------------------------
         public static void Initialize(string inputMapName)
         {
             status = PlugIn.ModelCore.Landscape.NewSiteVar<int>(0);
+            lethalTemp = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
             cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.BiomassCohorts");
             timeOfLastDisease = PlugIn.ModelCore.GetSiteVar<int>("Pathogen.TimeOfLastDisease");  // If other pathogen disturbance extension is active, use the registered site var from it
             if (timeOfLastDisease == null)
@@ -93,6 +95,14 @@ namespace Landis.Extension.RootRot
             get
             {
                 return timeOfLastDisease;
+            }
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<int> LethalTemp
+        {
+            get
+            {
+                return lethalTemp;
             }
         }
         //---------------------------------------------------------------------

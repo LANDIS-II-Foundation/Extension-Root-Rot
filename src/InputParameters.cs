@@ -18,6 +18,7 @@ namespace Landis.Extension.RootRot
         private float maxProbDI;
         private string outMapNamesTemplate;
         private string tolpMapNamesTemplate;
+        private string lethalTempMapNameTemplate;
         private string eventLogFileName;
         private string summaryLogFileName;
 
@@ -144,8 +145,8 @@ namespace Landis.Extension.RootRot
             { return outMapNamesTemplate; }
             set
             {
-                if (value == null)
-                    throw new InputValueException(value.ToString(), "Value must be a file path.");
+               // if (value == null)
+                //    throw new InputValueException(value.ToString(), "Value must be a file path.");
                 outMapNamesTemplate = value;
             }
         }
@@ -159,9 +160,24 @@ namespace Landis.Extension.RootRot
             { return tolpMapNamesTemplate; }
             set
             {
-                if (value == null)
-                    throw new InputValueException(value.ToString(), "Value must be a file path.");
+                //if (value == null)
+                //    throw new InputValueException(value.ToString(), "Value must be a file path.");
                 tolpMapNamesTemplate = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filenames for Lethal Temp output maps.
+        /// </summary>
+        public string LethalTempMapNameTemplate
+        {
+            get
+            { return lethalTempMapNameTemplate; }
+            set
+            {
+               // if (value == null)
+                 //   throw new InputValueException(value.ToString(), "Value must be a file path.");
+                lethalTempMapNameTemplate = value;
             }
         }
         //---------------------------------------------------------------------
@@ -264,6 +280,11 @@ namespace Landis.Extension.RootRot
         /// Template for the filenames for Time of Last Pathogen output maps.
         /// </summary>
         string TOLPMapNamesTemplate { get; set; }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filenames for Lethal Temp output maps.
+        /// </summary>
+        string LethalTempMapNameTemplate { get; set; }
         //---------------------------------------------------------------------
         /// <summary>
         /// Name of event log file.

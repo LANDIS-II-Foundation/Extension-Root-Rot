@@ -45,6 +45,7 @@ namespace Landis.Extension.RootRot
             };
             tblOut_events.RetriveFields(typeof(EventsLog));
             Extension.OutputMetadatas.Add(tblOut_events);
+            
 
             OutputMetadata tblOut_summary = new OutputMetadata()
             {
