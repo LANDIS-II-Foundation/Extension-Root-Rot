@@ -23,24 +23,24 @@
   
   <ItemGroup>
     <PackageReference Include="Landis.Core" Version="2.0.0" />
-    <PackageReference Include="Landis.SpatialModeling" Version="2.0.0" />
+    <PackageReference Include="Landis.SpatialModeling" Version="2.0.1" />
   </ItemGroup>
   
   <ItemGroup>
     <Reference Include="Landis.Library.AgeOnlyCohorts-v3">
-      <HintPath>..\..\..\Support-Library-Dlls-v7\Landis.Library.AgeOnlyCohorts-v3.dll</HintPath>
+      <HintPath>lib\Landis.Library.AgeOnlyCohorts-v3.dll</HintPath>
     </Reference>
     <Reference Include="Landis.Library.BiomassCohorts-v3">
-      <HintPath>..\..\..\Support-Library-Dlls-v7\Landis.Library.BiomassCohorts-v3.dll</HintPath>
+      <HintPath>lib\Landis.Library.BiomassCohorts-v3.dll</HintPath>
     </Reference>
     <Reference Include="Landis.Library.Cohorts-v2">
-      <HintPath>..\..\..\Support-Library-Dlls-v7\Landis.Library.Cohorts-v2.dll</HintPath>
+      <HintPath>lib\Landis.Library.Cohorts-v2.dll</HintPath>
     </Reference>
     <Reference Include="Landis.Library.Metadata-v2">
-      <HintPath>..\..\..\Support-Library-Dlls-v7\Landis.Library.Metadata-v2.dll</HintPath>
+      <HintPath>lib\Landis.Library.Metadata-v2.dll</HintPath>
     </Reference>
     <Reference Include="Landis.Library.Parameters-v2">
-      <HintPath>..\..\..\Support-Library-Dlls-v7\Landis.Library.Parameters-v2.dll</HintPath>
+      <HintPath>lib\Landis.Library.Parameters-v2.dll</HintPath>
     </Reference>
   </ItemGroup>
 
