@@ -1,7 +1,7 @@
 ; LANDIS-II Extension infomation
 #define CoreRelease "LANDIS-II-V7"
 #define ExtensionName "Root Rot"
-#define AppVersion "0.1"
+#define AppVersion "0.2"
 #define AppPublisher "LANDIS-II Foundation"
 #define AppURL "http://www.landis-ii.org/"
 
@@ -45,7 +45,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 ; This .dll IS the extension (ie, the extension's assembly)
 ; NB: Do not put an additional version number in the file name of this .dll
 ; (The name of this .dll is defined in the extension's \src\*.csproj file)
-Source: {#BuildDir}\Landis.Extension.RootRot.dll; DestDir: {#ExtDir}; Flags: replacesameversion
+Source: {#BuildDir}\Landis.Extension.RootRot.dll; DestDir: {#ExtDir}; Flags: ignoreversion
 
 ; Complete example for testing the extension
 ;Source: ..\examples\biomass-Pnet-succession-example\*.txt; DestDir: {#AppDir}\examples\{#ExtensionName}; Flags: replacesameversion

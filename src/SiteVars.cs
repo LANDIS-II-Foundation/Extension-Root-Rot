@@ -24,6 +24,13 @@ namespace Landis.Extension.RootRot
             if (timeOfLastDisease == null)
             {
                 timeOfLastDisease = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
+                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                {
+                    if (site.IsActive)
+                        timeOfLastDisease[site] = -9999;
+                    else
+                        timeOfLastDisease[site] = 0;
+                }
                 PlugIn.ModelCore.RegisterSiteVar(SiteVars.TimeOfLastDisease, "Pathogen.TimeOfLastDisease");
             }
             pressureHead = PlugIn.ModelCore.GetSiteVar<float>("Succession.PressureHead");

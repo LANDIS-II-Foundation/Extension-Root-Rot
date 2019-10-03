@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Landis.Extension.RootRot</RootNamespace>
     <AssemblyName>Landis.Extension.RootRot</AssemblyName>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Brian Miranda, Eric Gusstafson</Authors>
     <Company>USDA Forest Service</Company>
     <Copyright>LANDIS-II Foundation</Copyright>
