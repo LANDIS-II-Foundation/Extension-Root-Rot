@@ -60,10 +60,10 @@ namespace Landis.Extension.RootRot
             float speciesSuscept = PlugIn.Parameters.SusceptibilityTable[cohort.Species];
             if (speciesSuscept > 0)
             {
-                if (cohort.Age >= SiteVars.TimeOfLastDisease[this.currentSite])
+                if (cohort.Age >= PlugIn.ModelCore.CurrentTime - SiteVars.TimeOfLastDisease[this.currentSite])
                 {
                     // Reduce to 10% for subsequent exposures to the pathogen
-                    speciesSuscept /= 10;
+                    speciesSuscept /= 10.0f;
                 }
                 int biomassReduction = (int)Math.Round(speciesSuscept * cohort.Biomass);
                 BiomassRemoved += biomassReduction;
