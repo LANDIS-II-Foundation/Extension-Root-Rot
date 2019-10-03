@@ -1,7 +1,7 @@
 ; LANDIS-II Extension infomation
 #define CoreRelease "LANDIS-II-V7"
 #define ExtensionName "Root Rot"
-#define AppVersion "0.2"
+#define AppVersion "0.2.1"
 #define AppPublisher "LANDIS-II Foundation"
 #define AppURL "http://www.landis-ii.org/"
 
@@ -62,12 +62,12 @@ Source: {#InfoTxt}; DestDir: {#LandisPlugInDir}
 
 
 [Run]
-Filename: {#ExtensionsCmd}; Parameters: "remove ""Output-PnET"" "; WorkingDir: {#LandisPlugInDir}
+Filename: {#ExtensionsCmd}; Parameters: "remove ""Root Rot"" "; WorkingDir: {#LandisPlugInDir}
 Filename: {#ExtensionsCmd}; Parameters: "add ""{#InfoTxt}"" "; WorkingDir: {#LandisPlugInDir} 
 
 
 [UninstallRun]
-; Remove "Age-Only Succession" from "extensions.xml" file.
-Filename: {#ExtensionsCmd}; Parameters: "remove ""Output-PnET"" "; WorkingDir: {#LandisPlugInDir}
+; Remove "Root Rot" from "extensions.xml" file.
+Filename: {#ExtensionsCmd}; Parameters: "remove ""Root Rot"" "; WorkingDir: {#LandisPlugInDir}
 
 
