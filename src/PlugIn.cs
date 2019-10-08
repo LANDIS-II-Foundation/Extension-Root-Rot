@@ -101,6 +101,7 @@ namespace Landis.Extension.RootRot
 
             foreach (ActiveSite site in ModelCore.Landscape.ActiveSites)
             {
+                newEvent.currentSite = site;
                 int status = SiteVars.Status[site];
                 float pressureHead = SiteVars.PressureHead[site];
 
