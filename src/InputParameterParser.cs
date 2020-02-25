@@ -112,6 +112,19 @@ namespace Landis.Extension.RootRot
             else
                 parameters.LethalTempMapNameTemplate = null;
 
+            InputVar<string> totalBiomassRemovedMapName = new InputVar<string>("TotalBiomassRemovedMapName");
+            if (ReadOptionalVar(totalBiomassRemovedMapName))
+                parameters.TotalBiomassRemovedMapNameTemplate = totalBiomassRemovedMapName.Value;
+            else
+                parameters.TotalBiomassRemovedMapNameTemplate = null;
+
+            InputVar<string> speciesBiomassRemovedMapName = new InputVar<string>("SpeciesBiomassRemovedMapName");
+            if (ReadOptionalVar(speciesBiomassRemovedMapName))
+                parameters.SpeciesBiomassRemovedMapNamesTemplate = speciesBiomassRemovedMapName.Value;
+            else
+                parameters.SpeciesBiomassRemovedMapNamesTemplate = null;
+
+
             InputVar<string> eventLogFile = new InputVar<string>("EventLog");
             if (ReadOptionalVar(eventLogFile))
                 parameters.EventLogFileName = eventLogFile.Value;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Landis.Utilities;
+using Landis.Core;
 
 namespace Landis.Extension.RootRot
 {
@@ -11,6 +12,7 @@ namespace Landis.Extension.RootRot
     public static class MapNames
     {
         public const string TimestepVar = "timestep";
+        public const string SpeciesVar = "species";
 
         private static IDictionary<string, bool> knownVars;
         private static IDictionary<string, string> varValues;
@@ -40,6 +42,17 @@ namespace Landis.Extension.RootRot
             varValues[TimestepVar] = timestep.ToString();
             return OutputPath.ReplaceTemplateVars(template, varValues);
         }
-    }
+        //---------------------------------------------------------------------
+
+        public static string ReplaceTemplateVars(string template,
+                                                 string species,
+                                                 int timestep)
+        {
+            varValues[SpeciesVar] = species;
+            varValues[TimestepVar] = timestep.ToString();
+            return OutputPath.ReplaceTemplateVars(template, varValues);
+        }
+
+}
 
 }

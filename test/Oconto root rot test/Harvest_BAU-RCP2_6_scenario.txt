@@ -19,9 +19,9 @@ CellLength  30 << meters
 >> ----------------------   -------------------
 >>    "Biomass Insects"	    BiomassInsectsInput_GM2.txt
 	"Biomass Harvest"   Harvest_BAU.txt	<<local file with local MA and stand maps
-	"Base Wind"	    ../MicroburstWind_RCP2_6.txt 
-	"Linear Wind" 	    ../LinearWind_RCP2_6.txt
-	"Base Fire"	    BaseFire_2_6.txt	<<local fire region map
+>>	"Base Wind"	    ../MicroburstWind_RCP2_6.txt 
+>>	"Linear Wind" 	    ../LinearWind_RCP2_6.txt
+>>	"Base Fire"	    BaseFire_2_6.txt	<<local fire region map
    
 >>   DisturbancesRandomOrder  yes  << optional parameter; default = no
 

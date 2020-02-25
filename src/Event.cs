@@ -68,6 +68,16 @@ namespace Landis.Extension.RootRot
                 int biomassReduction = (int)Math.Round(speciesSuscept * cohort.Biomass);
                 BiomassRemoved += biomassReduction;
                 BiomassRemovedList[cohort.Species.Index] = BiomassRemovedList[cohort.Species.Index] + biomassReduction;
+                if (SiteVars.SpeciesBiomassRemoved[this.currentSite].ContainsKey(cohort.Species))
+                {
+                    int prevRemoved = SiteVars.SpeciesBiomassRemoved[this.currentSite][cohort.Species];
+                    SiteVars.SpeciesBiomassRemoved[this.currentSite][cohort.Species] = prevRemoved + biomassReduction;
+                }
+                else
+                {
+                    SiteVars.SpeciesBiomassRemoved[this.currentSite].Add(cohort.Species, biomassReduction);
+                }
+                SiteVars.TotalBiomassRemoved[this.currentSite] += biomassReduction;
                 if (biomassReduction == cohort.Biomass)
                     CohortsKilled += 1;
                 else

@@ -19,6 +19,8 @@ namespace Landis.Extension.RootRot
         private string outMapNamesTemplate;
         private string tolpMapNamesTemplate;
         private string lethalTempMapNameTemplate;
+        private string totalBiomassRemovedMapNameTemplate;
+        private string speciesBiomassRemovedMapNamesTemplate;
         private string eventLogFileName;
         private string summaryLogFileName;
 
@@ -182,6 +184,36 @@ namespace Landis.Extension.RootRot
         }
         //---------------------------------------------------------------------
         /// <summary>
+        /// Template for the filename for TotalBiomassRemoved output maps.
+        /// </summary>
+        public string TotalBiomassRemovedMapNameTemplate
+        {
+            get
+            { return totalBiomassRemovedMapNameTemplate; }
+            set
+            {
+                // if (value == null)
+                //   throw new InputValueException(value.ToString(), "Value must be a file path.");
+                totalBiomassRemovedMapNameTemplate = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filename for TotalBiomassRemoved output maps.
+        /// </summary>
+        public string SpeciesBiomassRemovedMapNamesTemplate
+        {
+            get
+            { return speciesBiomassRemovedMapNamesTemplate; }
+            set
+            {
+                // if (value == null)
+                //   throw new InputValueException(value.ToString(), "Value must be a file path.");
+                speciesBiomassRemovedMapNamesTemplate = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
         /// Name of event log file.
         /// </summary>
         public string EventLogFileName
@@ -285,6 +317,16 @@ namespace Landis.Extension.RootRot
         /// Template for the filenames for Lethal Temp output maps.
         /// </summary>
         string LethalTempMapNameTemplate { get; set; }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filenames for TotalBiomassRemoved output maps.
+        /// </summary>
+        string TotalBiomassRemovedMapNameTemplate { get; set; }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filenames for SpeciesBiomassRemoved output maps.
+        /// </summary>
+        string SpeciesBiomassRemovedMapNamesTemplate { get; set; }
         //---------------------------------------------------------------------
         /// <summary>
         /// Name of event log file.

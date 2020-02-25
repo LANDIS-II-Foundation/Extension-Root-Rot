@@ -31,6 +31,9 @@ namespace Landis.Extension.RootRot
         private string outMapNameTemplate;
         private string tolpMapNameTemplate;
         private string lethalTempMapNameTemplate;
+        private string totalBiomassRemovedMapNameTemplate;
+        private string speciesBiomassRemovedMapNameTemplate;
+
         //private StreamWriter log;
         public static IInputParameters Parameters;
         private static ICore modelCore;
@@ -80,6 +83,8 @@ namespace Landis.Extension.RootRot
             outMapNameTemplate = Parameters.OutMapNamesTemplate;
             tolpMapNameTemplate = Parameters.TOLPMapNamesTemplate;
             lethalTempMapNameTemplate = Parameters.LethalTempMapNameTemplate;
+            totalBiomassRemovedMapNameTemplate = Parameters.TotalBiomassRemovedMapNameTemplate;
+            speciesBiomassRemovedMapNameTemplate = Parameters.SpeciesBiomassRemovedMapNamesTemplate;
 
             SiteVars.Initialize(Parameters.InputMapName);
         }
@@ -104,6 +109,8 @@ namespace Landis.Extension.RootRot
                 newEvent.currentSite = site;
                 int status = SiteVars.Status[site];
                 float pressureHead = SiteVars.PressureHead[site];
+                SiteVars.SpeciesBiomassRemoved[site] = new Dictionary<ISpecies, int>();
+                SiteVars.TotalBiomassRemoved[site] = 0;
 
                 int newStatus = status;
                 if (status > 0) // Status 0 = Nonactive, not processed
@@ -292,6 +299,53 @@ namespace Landis.Extension.RootRot
                             pixel.MapCode.Value = 99;
                         }
                         outputRaster.WriteBufferPixel();
+                    }
+                }
+            }
+            //  Write TotalBiomassRemoved map
+            if (totalBiomassRemovedMapNameTemplate != null)
+            {
+                path = MapNames.ReplaceTemplateVars(totalBiomassRemovedMapNameTemplate, ModelCore.CurrentTime);
+                using (IOutputRaster<IntPixel> outputRaster = ModelCore.CreateRaster<IntPixel>(path, dimensions))
+                {
+                    IntPixel pixel = outputRaster.BufferPixel;
+                    foreach (Site site in ModelCore.Landscape.AllSites)
+                    {
+                        if (site.IsActive)
+                        {
+                            pixel.MapCode.Value = (int)(SiteVars.TotalBiomassRemoved[site]);
+                        }
+                        else
+                        {
+                            //  Inactive site
+                            pixel.MapCode.Value = 0;
+                        }
+                        outputRaster.WriteBufferPixel();
+                    }
+                }
+            }
+            //  Write SpeciesBiomassRemoved maps
+            if (speciesBiomassRemovedMapNameTemplate != null)
+            {
+                foreach (ISpecies spc in PlugIn.ModelCore.Species)
+                {
+                    path = MapNames.ReplaceTemplateVars(speciesBiomassRemovedMapNameTemplate, spc.Name, ModelCore.CurrentTime);
+                    using (IOutputRaster<IntPixel> outputRaster = ModelCore.CreateRaster<IntPixel>(path, dimensions))
+                    {
+                        IntPixel pixel = outputRaster.BufferPixel;
+                        foreach (Site site in ModelCore.Landscape.AllSites)
+                        {
+                            if ((site.IsActive) && (SiteVars.SpeciesBiomassRemoved[site].ContainsKey(spc)))
+                            {
+                                pixel.MapCode.Value = (int)(SiteVars.SpeciesBiomassRemoved[site][spc]);
+                            }
+                            else
+                            {
+                                //  Inactive site
+                                pixel.MapCode.Value = 0;
+                            }
+                            outputRaster.WriteBufferPixel();
+                        }
                     }
                 }
             }

@@ -47,6 +47,9 @@ MaxProbDI	0.85
 
 OutputMapName	"RootRot/RootRot-{timestep}.img"
 TOLPMapName	"RootRot/TOLP-{timestep}.img"
+TotalBiomassRemovedMapName  "RootRot/BiomassRemoved-{timestep}.img"
+SpeciesBiomassRemovedMapName  "RootRot/BiomassRemoved-{species}-{timestep}.img"
+
 
 EventLog	"RootRot/RootRot-events.csv"
 SummaryLog	"RootRot/RootRot-summary.csv"

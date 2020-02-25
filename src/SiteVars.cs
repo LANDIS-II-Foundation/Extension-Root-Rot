@@ -2,6 +2,8 @@
 //using Landis.Library.AgeOnlyCohorts;
 using System.IO;
 using Landis.Library.BiomassCohorts;
+using System.Collections.Generic;
+using Landis.Core;
 
 namespace Landis.Extension.RootRot
 {
@@ -13,12 +15,19 @@ namespace Landis.Extension.RootRot
         private static ISiteVar<float> pressureHead;
         private static ISiteVar<float> extremeMinTemp;
         private static ISiteVar<int> lethalTemp;
+        private static ISiteVar<int> totalBiomassRemoved;
+        private static ISiteVar<Dictionary<ISpecies,int>> speciesBiomassRemoved;
 
         //---------------------------------------------------------------------
         public static void Initialize(string inputMapName)
         {
             status = PlugIn.ModelCore.Landscape.NewSiteVar<int>(0);
             lethalTemp = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
+            totalBiomassRemoved = PlugIn.ModelCore.Landscape.NewSiteVar<int>(0);
+            speciesBiomassRemoved = PlugIn.ModelCore.Landscape.NewSiteVar < Dictionary<ISpecies, int>>();
+            foreach (ActiveSite site in PlugIn.ModelCore.Landscape.ActiveSites)
+                speciesBiomassRemoved[site] = new Dictionary<ISpecies, int>();
+
             cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.BiomassCohorts");
             timeOfLastDisease = PlugIn.ModelCore.GetSiteVar<int>("Pathogen.TimeOfLastDisease");  // If other pathogen disturbance extension is active, use the registered site var from it
             if (timeOfLastDisease == null)
@@ -134,6 +143,22 @@ namespace Landis.Extension.RootRot
             get
             {
                 return extremeMinTemp;
+            }
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<int> TotalBiomassRemoved
+        {
+            get
+            {
+                return totalBiomassRemoved;
+            }
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<Dictionary<ISpecies,int>> SpeciesBiomassRemoved
+        {
+            get
+            {
+                return speciesBiomassRemoved;
             }
         }
         //---------------------------------------------------------------------
