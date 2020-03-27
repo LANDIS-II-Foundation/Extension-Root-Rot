@@ -45,6 +45,7 @@ namespace Landis.Extension.RootRot
             ReadName(SppParms);
             InputVar<string> sppName = new InputVar<string>("Species");
             InputVar<float> suscept = new InputVar<float>("Susceptibility");
+            InputVar<float> suscept2 = new InputVar<float>("SecondarySusceptibility");
 
             while ((!AtEndOfInput) && (CurrentName != "LethalTemp"))
             {
@@ -64,8 +65,11 @@ namespace Landis.Extension.RootRot
                 else
                     lineNumbers[species.Name] = LineNumber;
 
+                parameters.SusceptibilityTable.Add(species, new float[2]);
                 ReadValue(suscept, currentLine);
-                parameters.SusceptibilityTable[species] = suscept.Value;
+                parameters.SusceptibilityTable[species][0] = suscept.Value;
+                ReadValue(suscept2, currentLine);
+                parameters.SusceptibilityTable[species][1] = suscept2.Value;
 
                 GetNextLine();
             }

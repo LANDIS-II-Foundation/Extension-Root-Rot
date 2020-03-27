@@ -9,7 +9,7 @@ namespace Landis.Extension.RootRot
     {
         private int timestep;
         private string inputMapFileName;
-        private Dictionary<ISpecies, float> susceptibilityTable;
+        private Dictionary<ISpecies, float[]> susceptibilityTable;
         private float lethalTemp;
         private float phWet;
         private float phDry;
@@ -58,7 +58,7 @@ namespace Landis.Extension.RootRot
         /// <summary>
         /// Species susceptibility values
         /// </summary>
-        public Dictionary<ISpecies, float> SusceptibilityTable
+        public Dictionary<ISpecies, float[]> SusceptibilityTable
         {
             get
             { return susceptibilityTable; }
@@ -245,7 +245,7 @@ namespace Landis.Extension.RootRot
         //---------------------------------------------------------------------
         public InputParameters()
         {
-            susceptibilityTable = new Dictionary<ISpecies, float>();
+            susceptibilityTable = new Dictionary<ISpecies, float[]>();
         }
         //---------------------------------------------------------------------
     }
@@ -271,7 +271,7 @@ namespace Landis.Extension.RootRot
         /// <summary>
         /// Species susceptibility values
         /// </summary>
-        Dictionary<ISpecies, float> SusceptibilityTable { get; set; }
+        Dictionary<ISpecies, float[]> SusceptibilityTable { get; set; }
         //---------------------------------------------------------------------
         /// <summary>
         /// Minimum temperature below which pathogen cannot survive

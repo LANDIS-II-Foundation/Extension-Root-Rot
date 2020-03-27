@@ -127,10 +127,10 @@ namespace Landis.Extension.RootRot
                     {
                         presence = false;
                         lethalTempSites += 1;
-                        newStatus = 1;  // If Presence == 0, site transitions to Susceptible (S) regardless of current state 
+                        newStatus = 1;  // If Presence == false, site transitions to Susceptible (S) regardless of current state 
                         SiteVars.LethalTemp[site] = (int) Math.Round(tmin);
                     }
-                    else  // If Presence == 1, other transitions are possible based on Conducive Environment
+                    else  // If Presence == true, other transitions are possible based on Conducive Environment
                     {
                         SiteVars.LethalTemp[site] = 99;
                         presence = true;
@@ -151,7 +151,7 @@ namespace Landis.Extension.RootRot
                             {
                                 foreach (ICohort cohort in speciesCohorts)
                                 {
-                                    float speciesSuscept = Parameters.SusceptibilityTable[cohort.Species];
+                                    float speciesSuscept = Parameters.SusceptibilityTable[cohort.Species][0];
                                     if (speciesSuscept > maxSusceptibility)
                                     {
                                         maxSusceptibility = speciesSuscept;
@@ -178,7 +178,7 @@ namespace Landis.Extension.RootRot
                                     pDI = m3 * pressureHead + b3;
                                 pDI = Math.Min(pDI, Parameters.MaxProbDI);
                             }
-                            if(pDI < PlugIn.ModelCore.GenerateUniform())
+                            if(pDI >= PlugIn.ModelCore.GenerateUniform())
                             {
                                 newStatus = 2;
                             }
@@ -189,7 +189,7 @@ namespace Landis.Extension.RootRot
 
                             // probability of I converting to D
                             pID = Calc_pID(Parameters, pressureHead);
-                            if (pID < PlugIn.ModelCore.GenerateUniform())
+                            if (pID >= PlugIn.ModelCore.GenerateUniform())
                             {
                                 newStatus = 3;
                             }
@@ -201,11 +201,11 @@ namespace Landis.Extension.RootRot
                                 pSI = (float)-1.0 / Parameters.PhWet * pressureHead + 1;
                             else
                                 pSI = 0;
-                            if (pSI < PlugIn.ModelCore.GenerateUniform())
+                            if (pSI >= PlugIn.ModelCore.GenerateUniform())
                             {
                                 // probability of S converting to D is contingent on S converting to I
                                 pID = Calc_pID(Parameters, pressureHead);
-                                if (pID < PlugIn.ModelCore.GenerateUniform())                             
+                                if (pID >= PlugIn.ModelCore.GenerateUniform())                             
                                     newStatus = 3;                                
                                 else
                                     newStatus = 2;

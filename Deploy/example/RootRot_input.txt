@@ -5,9 +5,10 @@ Timestep	5
 >>InputMap	rootrot_init_map.img << Optional
 
 SpeciesSusceptibility
-pinustro	0.5
-pinubank	0.5
-pinuresi	0.5
+>> species	1st	2nd
+pinustro	0.5	0.05
+pinubank	0.5	0.05
+pinuresi	0.5	0.05
 
 LethalTemp	-24
 PhWet		30
