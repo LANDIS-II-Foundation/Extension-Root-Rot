@@ -1,0 +1,46 @@
+LandisData	"Root Rot"	<<Phytophthora cinnamomi
+
+Timestep	5
+
+>>InputMap	rootrot_init_map.img << Optional
+
+SpeciesSusceptibility	<<index - 0.0=unsusceptible; 1.0=highly susceptible
+>> species	1st	2nd infection
+acerrubr 	0.0	0.0
+acersacc 	0.0	0.0
+>>acersach	0.0	0.0
+betulent 	0.0	0.0
+caryglab	0.0	0.0
+castdent	0.8	0.5
+fagugran	0.0	0.0
+fraxamer 	0.0	0.0
+lirituli	0.0	0.0
+nysssylv	0.0	0.0
+pinustro 	0.0	0.0
+prunsero 	0.0	0.0
+queralba 	0.05	0.03
+quercocc	0.05	0.03
+querprin	0.05	0.03
+querrubr 	0.05	0.03
+quervelu	0.05	0.03
+robipseu	0.05	0.03
+tiliamer 	0.0	0.0
+tsugcana 	0.0	0.0
+>>ulmuamer	0.0	0.0
+
+LethalTemp	-24	<<degrees C
+PhWet		30	<<units=pressure head
+PhDry		150	<<units=pressure head
+PhMax		250	<<units=pressure head
+MinProbID	0.10
+MaxProbDI	0.85
+
+OutputMapName	"RootRot/RootRot-{timestep}.img"
+TOLPMapName	"RootRot/TOLP-{timestep}.img"
+LethalTempMapName	"RootRot/LethalTemp-{timestep}.img"
+TotalBiomassRemovedMapName "RootRot/TotalBiomassRemoved-{timestep}.img"
+SpeciesBiomassRemovedMapName "RootRot/BiomassRemoved-{species}-{timestep}.img"
+
+EventLog	"RootRot/RootRot-events.csv"
+SummaryLog	"RootRot/RootRot-summary.csv"
+

@@ -108,7 +108,6 @@ namespace Landis.Extension.RootRot
             {
                 newEvent.currentSite = site;
                 int status = SiteVars.Status[site];
-                float pressureHead = SiteVars.PressureHead[site];
                 SiteVars.SpeciesBiomassRemoved[site] = new Dictionary<ISpecies, int>();
                 SiteVars.TotalBiomassRemoved[site] = 0;
 
@@ -121,14 +120,14 @@ namespace Landis.Extension.RootRot
                     float dTemp = (tmin - Parameters.LethalTemp) / Math.Abs(Parameters.LethalTemp);
                     dTemp = Math.Min(dTemp, 1);
                     dTemp = Math.Max(dTemp, 0);
-                    
+
                     bool presence = (status > 1);
                     if (dTemp < PlugIn.ModelCore.GenerateUniform())
                     {
                         presence = false;
                         lethalTempSites += 1;
                         newStatus = 1;  // If Presence == false, site transitions to Susceptible (S) regardless of current state 
-                        SiteVars.LethalTemp[site] = (int) Math.Round(tmin);
+                        SiteVars.LethalTemp[site] = (int)Math.Round(tmin);
                     }
                     else  // If Presence == true, other transitions are possible based on Conducive Environment
                     {
@@ -146,6 +145,7 @@ namespace Landis.Extension.RootRot
 
                             // probability of D converting to I (pDI)
                             float maxSusceptibility = 0;
+                            float pDIavg = 0;
 
                             foreach (ISpeciesCohorts speciesCohorts in SiteVars.Cohorts[site])
                             {
@@ -159,26 +159,41 @@ namespace Landis.Extension.RootRot
                                     }
                                 }
                             }
-                            
+
                             if (maxSusceptibility == 0)
-                                pDI = 1;
+                                pDIavg = 1;
                             else
                             {
-                                float m2 = (float) (1.0 / (((Parameters.PhDry - Parameters.PhWet)/ 2.0) - Parameters.PhWet));
-                                float b2 = (float) -1.0 * Parameters.PhWet * m2;
-                                float m3 = (float) (1.0 / ((Parameters.PhDry - Parameters.PhWet) / 2.0 - Parameters.PhDry));
-                                float b3 = (float) -1.0 * Parameters.PhDry * m3;
-                                if (pressureHead < Parameters.PhWet)
-                                    pDI = 0;
-                                else if (pressureHead > Parameters.PhDry)
-                                    pDI = 0;
-                                else if (pressureHead <= (Parameters.PhDry - Parameters.PhWet) / 2)
-                                    pDI = m2 * pressureHead + b2;
-                                else
-                                    pDI = m3 * pressureHead + b3;
-                                pDI = Math.Min(pDI, Parameters.MaxProbDI);
+                                float midpoint = (float)((Parameters.PhDry - Parameters.PhWet) / 2.0);
+                                float m2 = (float)(1.0 / (midpoint - Parameters.PhWet));
+                                float b2 = (float)-1.0 * Parameters.PhWet * m2;
+                                float m3 = (float)(1.0 / (midpoint - Parameters.PhDry));
+                                float b3 = (float)-1.0 * Parameters.PhDry * m3;
+
+                                float pDIsum = 0;
+                                float pDIcount = 0;
+                                for (int m = 0; m < SiteVars.MonthlyPressureHead[site].Count(); m++)
+                                {
+                                    if (!(SiteVars.MonthlySoilTemp[site][m] == null))
+                                    {
+                                        float pressureHead = SiteVars.MonthlyPressureHead[site][m];
+                                        if (pressureHead < Parameters.PhWet)
+                                            pDI = 0;
+                                        else if (pressureHead > Parameters.PhDry)
+                                            pDI = 0;
+                                        else if (pressureHead <= (Parameters.PhDry - Parameters.PhWet) / 2)
+                                            pDI = m2 * pressureHead + b2;
+                                        else
+                                            pDI = m3 * pressureHead + b3;
+                                        pDI = Math.Min(pDI, Parameters.MaxProbDI);
+                                        pDIsum += pDI;
+                                        pDIcount++;
+                                    }
+                                }
+                                if(pDIcount > 0)
+                                    pDIavg = pDIsum / pDIcount;
                             }
-                            if(pDI >= PlugIn.ModelCore.GenerateUniform())
+                            if (pDIavg >= PlugIn.ModelCore.GenerateUniform())
                             {
                                 newStatus = 2;
                             }
@@ -188,7 +203,7 @@ namespace Landis.Extension.RootRot
                             // probability of I converting to S only based on presenece - handled above
 
                             // probability of I converting to D
-                            pID = Calc_pID(Parameters, pressureHead);
+                            pID = Calc_pID(Parameters, site);
                             if (pID >= PlugIn.ModelCore.GenerateUniform())
                             {
                                 newStatus = 3;
@@ -197,37 +212,79 @@ namespace Landis.Extension.RootRot
                         else if (status == 1)  // Site currently Susceptible (S) can transition to Infected (I) or Diseased (D)
                         {
                             // probability of S converting to I
-                            if (pressureHead < Parameters.PhWet)
-                                pSI = (float)-1.0 / Parameters.PhWet * pressureHead + 1;
-                            else
-                                pSI = 0;
-                            if (pSI >= PlugIn.ModelCore.GenerateUniform())
+                            float pSIsum = 0;
+                            int pSIcount = 0;
+
+                            for (int m = 0; m < SiteVars.MonthlyPressureHead[site].Count(); m++)
+                            {
+                                float WetnessIndex = 0;
+                                float depthKey = Parameters.SoilTDepth;
+                                SortedList<float, float> soilTemps = SiteVars.MonthlySoilTemp[site][m];
+                                if (!(soilTemps == null))
+                                {
+                                    if (!soilTemps.ContainsKey(depthKey))
+                                    {
+                                        List<float> keys = soilTemps.Keys.ToList<float>();
+                                        int index = keys.BinarySearch(depthKey);
+                                        if (index < 0)
+                                            depthKey = keys[(~index)];
+                                        else
+                                            depthKey = keys[index];
+                                    }
+                                    float soilTemp = soilTemps[depthKey];
+                                     if (SiteVars.MonthlyPressureHead[site][m] < Parameters.PhWet)
+                                        WetnessIndex = 1;
+                                    else
+                                    {
+                                        WetnessIndex = (float)((1.0 / (Parameters.PhWet - Parameters.PhDry)) * SiteVars.MonthlyPressureHead[site][m] - (Parameters.PhDry / (Parameters.PhWet - Parameters.PhDry)));
+                                        WetnessIndex = (float)Math.Max(0, WetnessIndex);
+                                    }
+                                    if (soilTemp < Parameters.MinSoilTemp)
+                                    {
+                                        pSI = 0;
+                                    }
+                                    else
+                                    {
+                                        float FC = SiteVars.FieldCapacity[site];
+                                        pSI = (float)(0.006711 + 0.556566 * WetnessIndex + 0.013227 * FC - 0.008511 * WetnessIndex * FC);
+                                    }
+                                    pSIsum += pSI;
+                                    pSIcount++;
+                                }
+                            }
+                            float pSIAvg = 0;
+                            if (pSIcount >0)
+                                pSIAvg = pSIsum / (float)pSIcount;
+                           
+
+                            if (pSIAvg >= PlugIn.ModelCore.GenerateUniform())
                             {
                                 // probability of S converting to D is contingent on S converting to I
-                                pID = Calc_pID(Parameters, pressureHead);
-                                if (pID >= PlugIn.ModelCore.GenerateUniform())                             
-                                    newStatus = 3;                                
+                                pID = Calc_pID(Parameters, site);
+                                if (pID >= PlugIn.ModelCore.GenerateUniform())
+                                    newStatus = 3;
                                 else
                                     newStatus = 2;
                             }
                         }
                     }
-                    if (newStatus == 2) // Infected
-                        newEvent.InfectedSites += 1;
-                    if(newStatus == 3) // Diseased - can cause damage
-                    {
-                        newEvent.DiseasedSites += 1;
-                        int damage = SiteVars.Cohorts[site].ReduceOrKillBiomassCohorts(newEvent);
-                        if(damage > 0)
-                        {
-                            newEvent.TotalSitesDamaged += 1;
-                        }
-                        SiteVars.TimeOfLastDisease[site] = PlugIn.ModelCore.CurrentTime;
-                    }
                 }
+                if (newStatus == 2) // Infected
+                    newEvent.InfectedSites += 1;
+                if (newStatus == 3) // Diseased - can cause damage
+                {
+                    newEvent.DiseasedSites += 1;
+                    int damage = SiteVars.Cohorts[site].ReduceOrKillBiomassCohorts(newEvent);
+                    if (damage > 0)
+                    {
+                        newEvent.TotalSitesDamaged += 1;
+                    }
+                    SiteVars.TimeOfLastDisease[site] = PlugIn.ModelCore.CurrentTime;
+                }
+
                 SiteVars.Status[site] = newStatus;
             }
-            newEvent.LethalTemp = (float) lethalTempSites / (float) PlugIn.ModelCore.Landscape.ActiveSiteCount;
+            newEvent.Absent = (float) lethalTempSites / (float) PlugIn.ModelCore.Landscape.ActiveSiteCount;
             // Write logs
             LogEvent(PlugIn.ModelCore.CurrentTime, newEvent);
 
@@ -352,21 +409,36 @@ namespace Landis.Extension.RootRot
 
 
         }
-        private static float Calc_pID(IInputParameters parameters, float pressureHead)
+        private static float Calc_pID(IInputParameters parameters, ActiveSite site)
         {
-            float pID = 0;
-            float m1 = (float)(1.0 - parameters.MinProbID) / (parameters.PhMax - parameters.PhDry);
-            float b1 = (float)(parameters.MinProbID - (1.0 * parameters.PhDry * m1));
-            if (pressureHead < parameters.PhWet)
-                pID = (float)((parameters.MinProbID - 1.0) / parameters.PhWet * pressureHead + 1.0);
-            else if (pressureHead > parameters.PhDry)
-                if (pressureHead > parameters.PhMax)
-                    pID = 1;
-                else
-                    pID = m1 * pressureHead + b1;
-            else
-                pID = parameters.MinProbID;
-            return pID;
+            float pIDsum = 0;
+            float pIDcount = 0;
+            for (int m = 0; m < SiteVars.MonthlyPressureHead[site].Count(); m++)
+            {
+                float pressureHead = SiteVars.MonthlyPressureHead[site][m];
+                if (pressureHead > -9999)
+                {
+                    float pID = 0;
+                    float m1 = (float)(1.0 / (parameters.PhMax - parameters.PhDry));
+                    float b1 = (float)((-1.0) * parameters.PhDry * m1);
+                    if (pressureHead < parameters.PhWet)
+                        pID = 1F;
+                    else if (pressureHead <= parameters.PhDry)
+                        pID = (float)((1.0 / (parameters.PhWet - parameters.PhDry)) * pressureHead - (parameters.PhDry / (parameters.PhWet - parameters.PhDry)));
+                    else if (pressureHead > parameters.PhMax)
+                        pID = 1;
+                    else
+                        pID = m1 * pressureHead + b1;
+
+                    pID = (float)Math.Max(pID, parameters.MinProbID);
+                    pIDsum += pID;
+                    pIDcount++;
+                }
+            }
+            float pIDavg = 0;
+            if (pIDcount > 0)
+                pIDavg = pIDsum / pIDcount;
+            return pIDavg;
 
         }
         //---------------------------------------------------------------------
@@ -394,7 +466,7 @@ namespace Landis.Extension.RootRot
             sl.CohortsDamaged = diseaseEvent.CohortsDamaged;
             sl.CohortsKilled = diseaseEvent.CohortsKilled;
             sl.MortalityBiomass = diseaseEvent.BiomassRemoved;
-            sl.LethalTemp = diseaseEvent.LethalTemp;
+            sl.Absent = diseaseEvent.Absent;
 
             summaryLog.AddObject(sl);
             summaryLog.WriteToFile();

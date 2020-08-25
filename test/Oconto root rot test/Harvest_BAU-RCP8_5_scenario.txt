@@ -32,7 +32,7 @@ CellLength  30 << meters
 >> -----------------        -------------------
 >>>>  "Output Max Species Age"	../max-spp-age.output.txt
 >>  "Output Biomass Reclass"	../Oconto.biomass-reclass.output.txt
-  "Output-PnET"			../biomass.outputPnET.txt
+>>  "Output-PnET"			../biomass.outputPnET.txt
 >>  "Output Cohort Statistics"    ../output_cohort_stats.txt
 
 

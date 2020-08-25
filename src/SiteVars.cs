@@ -12,11 +12,13 @@ namespace Landis.Extension.RootRot
         private static ISiteVar<int> status;
         private static ISiteVar<int> timeOfLastDisease;
         private static ISiteVar<ISiteCohorts> cohorts;
-        private static ISiteVar<float> pressureHead;
+        private static ISiteVar<float[]> monthlyPressureHead;
         private static ISiteVar<float> extremeMinTemp;
         private static ISiteVar<int> lethalTemp;
         private static ISiteVar<int> totalBiomassRemoved;
         private static ISiteVar<Dictionary<ISpecies,int>> speciesBiomassRemoved;
+        private static ISiteVar<SortedList<float,float>[]> monthlySoilTemp;
+        private static ISiteVar<float> fieldCapacity;
 
         //---------------------------------------------------------------------
         public static void Initialize(string inputMapName)
@@ -42,10 +44,12 @@ namespace Landis.Extension.RootRot
                 }
                 PlugIn.ModelCore.RegisterSiteVar(SiteVars.TimeOfLastDisease, "Pathogen.TimeOfLastDisease");
             }
-            pressureHead = PlugIn.ModelCore.GetSiteVar<float>("Succession.PressureHead");
+            monthlyPressureHead = PlugIn.ModelCore.GetSiteVar<float[]>("Succession.MonthlyPressureHead");
             extremeMinTemp = PlugIn.ModelCore.GetSiteVar<float>("Succession.ExtremeMinTemp");
+            monthlySoilTemp = PlugIn.ModelCore.GetSiteVar<SortedList<float, float>[]>("Succession.MonthlySoilTemp");
+            fieldCapacity = PlugIn.ModelCore.GetSiteVar<float>("Succession.SoilFieldCapacity");
 
-            if(inputMapName == null)
+            if (inputMapName == null)
             {
                 foreach(Site site in PlugIn.ModelCore.Landscape.AllSites)
                 {
@@ -130,11 +134,19 @@ namespace Landis.Extension.RootRot
             }
         }
         //---------------------------------------------------------------------
-        public static ISiteVar<float> PressureHead
+        public static ISiteVar<float[]> MonthlyPressureHead
         {
             get
             {
-                return pressureHead;
+                return monthlyPressureHead;
+            }
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<SortedList<float,float>[]> MonthlySoilTemp
+        {
+            get
+            {
+                return monthlySoilTemp;
             }
         }
         //---------------------------------------------------------------------
@@ -143,6 +155,14 @@ namespace Landis.Extension.RootRot
             get
             {
                 return extremeMinTemp;
+            }
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<float> FieldCapacity
+        {
+            get
+            {
+                return fieldCapacity;
             }
         }
         //---------------------------------------------------------------------

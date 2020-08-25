@@ -14,6 +14,8 @@ namespace Landis.Extension.RootRot
         private float phWet;
         private float phDry;
         private float phMax;
+        private float minSoilTemp;
+        private float soilTDepth;
         private float minProbID;
         private float maxProbDI;
         private string outMapNamesTemplate;
@@ -243,6 +245,28 @@ namespace Landis.Extension.RootRot
             }
         }
         //---------------------------------------------------------------------
+        /// <summary>
+        /// Minimum soil temperature below which pathogen cannot survive
+        /// </summary>
+        public float MinSoilTemp
+        {
+            get
+            { return minSoilTemp; }
+            set
+            { minSoilTemp = value; }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Depth at which MinSoilTemp is measured
+        /// </summary>
+        public float SoilTDepth
+        {
+            get
+            { return soilTDepth; }
+            set
+            { soilTDepth = value; }
+        }
+        //---------------------------------------------------------------------
         public InputParameters()
         {
             susceptibilityTable = new Dictionary<ISpecies, float[]>();
@@ -277,6 +301,16 @@ namespace Landis.Extension.RootRot
         /// Minimum temperature below which pathogen cannot survive
         /// </summary>
         float LethalTemp { get; set; }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Minimum soil temperature below which pathogen cannot survive
+        /// </summary>
+        float MinSoilTemp { get; set; }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Depth of minimum soil temperature measurement
+        /// </summary>
+         float SoilTDepth { get; set; }
         //---------------------------------------------------------------------
         /// <summary>
         /// Pressurehead threshold below which the soil is considered wet

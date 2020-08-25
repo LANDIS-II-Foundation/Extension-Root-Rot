@@ -43,8 +43,8 @@ namespace Landis.Extension.RootRot
         [DataFieldAttribute(Unit = FieldUnits.g_B_m2, Desc = "Biomass Removed")]
         public int MortalityBiomass { set; get; }
 
-        [DataFieldAttribute(Unit = "Boolean", Desc = "Lethal Temp")]
-        public float LethalTemp { set; get; }
+        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Absent")]
+        public float Absent { set; get; }
     }
 
     /*public class EventTable<EventLog>

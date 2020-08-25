@@ -18,7 +18,7 @@ namespace Landis.Extension.RootRot
         public int CohortsKilled;
         public int InfectedSites;
         public int DiseasedSites;
-        public float LethalTemp;
+        public float Absent;
 
         //---------------------------------------------------------------------
         ExtensionType IDisturbance.Type
@@ -51,7 +51,7 @@ namespace Landis.Extension.RootRot
             this.TotalSitesDamaged = 0;
             this.InfectedSites = 0;
             this.DiseasedSites = 0;
-            this.LethalTemp = 0;
+            this.Absent = 0;
         }
         //---------------------------------------------------------------------
         //  A filter to determine which cohorts are removed.

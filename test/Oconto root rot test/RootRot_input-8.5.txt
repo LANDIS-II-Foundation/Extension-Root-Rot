@@ -40,8 +40,10 @@ tsugcana 	0.0	0.0
 ulmuamer	0.0	0.0
 
 LethalTemp	-30	<<degrees C
-PhWet		30	<<units=pressure head
-PhDry		150	<<units=pressure head
+MinSoilTemp	10 	<<degrees C
+SoilTempDepth	0.10	<< meters
+PhWet		51	<<units=pressure head
+PhDry		102	<<units=pressure head
 PhMax		250	<<units=pressure head
 MinProbID	0.10
 MaxProbDI	0.85
