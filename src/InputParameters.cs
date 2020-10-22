@@ -23,6 +23,10 @@ namespace Landis.Extension.RootRot
         private string lethalTempMapNameTemplate;
         private string totalBiomassRemovedMapNameTemplate;
         private string speciesBiomassRemovedMapNamesTemplate;
+        private string soilTempMapNameTemplate;
+        private string wetnessIndexMapNameTemplate;
+        private string pSIMapNameTemplate;
+        private string pIDMapNameTemplate;
         private string eventLogFileName;
         private string summaryLogFileName;
 
@@ -186,7 +190,7 @@ namespace Landis.Extension.RootRot
         }
         //---------------------------------------------------------------------
         /// <summary>
-        /// Template for the filename for TotalBiomassRemoved output maps.
+        /// Template for the filename for SpeciesBiomassRemoved output maps.
         /// </summary>
         public string TotalBiomassRemovedMapNameTemplate
         {
@@ -212,6 +216,66 @@ namespace Landis.Extension.RootRot
                 // if (value == null)
                 //   throw new InputValueException(value.ToString(), "Value must be a file path.");
                 speciesBiomassRemovedMapNamesTemplate = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filename for SoilTemp output maps.
+        /// </summary>
+        public string SoilTempMapNameTemplate
+        {
+            get
+            { return soilTempMapNameTemplate; }
+            set
+            {
+                // if (value == null)
+                //   throw new InputValueException(value.ToString(), "Value must be a file path.");
+                soilTempMapNameTemplate = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filename for WetnessIndex output maps.
+        /// </summary>
+        public string WetnessIndexMapNameTemplate
+        {
+            get
+            { return wetnessIndexMapNameTemplate; }
+            set
+            {
+                // if (value == null)
+                //   throw new InputValueException(value.ToString(), "Value must be a file path.");
+                wetnessIndexMapNameTemplate = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filename for pSI output maps.
+        /// </summary>
+        public string PSIMapNameTemplate
+        {
+            get
+            { return pSIMapNameTemplate; }
+            set
+            {
+                // if (value == null)
+                //   throw new InputValueException(value.ToString(), "Value must be a file path.");
+                pSIMapNameTemplate = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filename for pID output maps.
+        /// </summary>
+        public string PIDMapNameTemplate
+        {
+            get
+            { return pIDMapNameTemplate; }
+            set
+            {
+                // if (value == null)
+                //   throw new InputValueException(value.ToString(), "Value must be a file path.");
+                pIDMapNameTemplate = value;
             }
         }
         //---------------------------------------------------------------------
@@ -361,6 +425,26 @@ namespace Landis.Extension.RootRot
         /// Template for the filenames for SpeciesBiomassRemoved output maps.
         /// </summary>
         string SpeciesBiomassRemovedMapNamesTemplate { get; set; }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filenames for SoilTemp output maps.
+        /// </summary>
+        string SoilTempMapNameTemplate { get; set; }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filenames for WetnessIndex output maps.
+        /// </summary>
+        string WetnessIndexMapNameTemplate { get; set; }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filenames for pSI output maps.
+        /// </summary>
+        string PSIMapNameTemplate { get; set; }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filenames for pID output maps.
+        /// </summary>
+        string PIDMapNameTemplate { get; set; }
         //---------------------------------------------------------------------
         /// <summary>
         /// Name of event log file.

@@ -33,6 +33,10 @@ namespace Landis.Extension.RootRot
         private string lethalTempMapNameTemplate;
         private string totalBiomassRemovedMapNameTemplate;
         private string speciesBiomassRemovedMapNameTemplate;
+        private string soilTempMapNameTemplate;
+        private string wetnessIndexMapNameTemplate;
+        private string pSIMapNameTemplate;
+        private string pIDMapNameTemplate;
 
         //private StreamWriter log;
         public static IInputParameters Parameters;
@@ -85,6 +89,10 @@ namespace Landis.Extension.RootRot
             lethalTempMapNameTemplate = Parameters.LethalTempMapNameTemplate;
             totalBiomassRemovedMapNameTemplate = Parameters.TotalBiomassRemovedMapNameTemplate;
             speciesBiomassRemovedMapNameTemplate = Parameters.SpeciesBiomassRemovedMapNamesTemplate;
+            soilTempMapNameTemplate = Parameters.SoilTempMapNameTemplate;
+            wetnessIndexMapNameTemplate = Parameters.WetnessIndexMapNameTemplate;
+            pSIMapNameTemplate = Parameters.PSIMapNameTemplate;
+            pIDMapNameTemplate = Parameters.PIDMapNameTemplate;
 
             SiteVars.Initialize(Parameters.InputMapName);
         }
@@ -110,6 +118,11 @@ namespace Landis.Extension.RootRot
                 int status = SiteVars.Status[site];
                 SiteVars.SpeciesBiomassRemoved[site] = new Dictionary<ISpecies, int>();
                 SiteVars.TotalBiomassRemoved[site] = 0;
+                SiteVars.AvgSoilTemp[site] = 999;
+                SiteVars.Avg_pSI[site] = (float)-1.0;
+                SiteVars.Avg_WetnessIndex[site] = (float)-1.0;
+                SiteVars.Avg_pID[site] = (float)-1.0;
+
 
                 int newStatus = status;
                 if (status > 0) // Status 0 = Nonactive, not processed
@@ -204,6 +217,7 @@ namespace Landis.Extension.RootRot
 
                             // probability of I converting to D
                             pID = Calc_pID(Parameters, site);
+                            SiteVars.Avg_pID[site] = pID;
                             if (pID >= PlugIn.ModelCore.GenerateUniform())
                             {
                                 newStatus = 3;
@@ -214,6 +228,10 @@ namespace Landis.Extension.RootRot
                             // probability of S converting to I
                             float pSIsum = 0;
                             int pSIcount = 0;
+                            float soilTempsum = 0;
+                            int soilTempcount = 0;
+                            float wetnessSum = 0;
+                            int wetnessCount = 0;
 
                             for (int m = 0; m < SiteVars.MonthlyPressureHead[site].Count(); m++)
                             {
@@ -232,13 +250,17 @@ namespace Landis.Extension.RootRot
                                             depthKey = keys[index];
                                     }
                                     float soilTemp = soilTemps[depthKey];
-                                     if (SiteVars.MonthlyPressureHead[site][m] < Parameters.PhWet)
+                                    soilTempsum += soilTemp;
+                                    soilTempcount++;
+                                    if (SiteVars.MonthlyPressureHead[site][m] < Parameters.PhWet)
                                         WetnessIndex = 1;
                                     else
                                     {
                                         WetnessIndex = (float)((1.0 / (Parameters.PhWet - Parameters.PhDry)) * SiteVars.MonthlyPressureHead[site][m] - (Parameters.PhDry / (Parameters.PhWet - Parameters.PhDry)));
                                         WetnessIndex = (float)Math.Max(0, WetnessIndex);
                                     }
+                                    wetnessSum += WetnessIndex;
+                                    wetnessCount++;
                                     if (soilTemp < Parameters.MinSoilTemp)
                                     {
                                         pSI = 0;
@@ -255,12 +277,21 @@ namespace Landis.Extension.RootRot
                             float pSIAvg = 0;
                             if (pSIcount >0)
                                 pSIAvg = pSIsum / (float)pSIcount;
-                           
+                            SiteVars.Avg_pSI[site] = pSIAvg;
+                            float soilTempAvg = 0;
+                            if (soilTempcount > 0)
+                                soilTempAvg = soilTempsum / (float)soilTempcount;
+                            SiteVars.AvgSoilTemp[site] = soilTempAvg;
+                            float wetnessAvg = 0;
+                            if (wetnessCount > 0)
+                                wetnessAvg = wetnessSum / (float)wetnessCount;
+                            SiteVars.Avg_WetnessIndex[site] = wetnessAvg;
 
                             if (pSIAvg >= PlugIn.ModelCore.GenerateUniform())
                             {
                                 // probability of S converting to D is contingent on S converting to I
                                 pID = Calc_pID(Parameters, site);
+                                SiteVars.Avg_pID[site] = pID;
                                 if (pID >= PlugIn.ModelCore.GenerateUniform())
                                     newStatus = 3;
                                 else
@@ -407,7 +438,94 @@ namespace Landis.Extension.RootRot
                 }
             }
 
-
+            //Write additional outputs
+            if (soilTempMapNameTemplate != null)
+            {
+                path = MapNames.ReplaceTemplateVars(soilTempMapNameTemplate, ModelCore.CurrentTime);
+                using (IOutputRaster<IntPixel> outputRaster = ModelCore.CreateRaster<IntPixel>(path, dimensions))
+                {
+                    IntPixel pixel = outputRaster.BufferPixel;
+                    foreach (Site site in ModelCore.Landscape.AllSites)
+                    {
+                        if (site.IsActive)
+                        {
+                            pixel.MapCode.Value = (int)(Math.Round(SiteVars.AvgSoilTemp[site]));
+                        }
+                        else
+                        {
+                            //  Inactive site
+                            pixel.MapCode.Value = 999;
+                        }
+                        outputRaster.WriteBufferPixel();
+                    }
+                }
+            }
+            //Write additional outputs
+            if (wetnessIndexMapNameTemplate != null)
+            {
+                path = MapNames.ReplaceTemplateVars(wetnessIndexMapNameTemplate, ModelCore.CurrentTime);
+                using (IOutputRaster<IntPixel> outputRaster = ModelCore.CreateRaster<IntPixel>(path, dimensions))
+                {
+                    IntPixel pixel = outputRaster.BufferPixel;
+                    foreach (Site site in ModelCore.Landscape.AllSites)
+                    {
+                        if (site.IsActive)
+                        {
+                            pixel.MapCode.Value = (int)(Math.Round(SiteVars.Avg_WetnessIndex[site]*100));
+                        }
+                        else
+                        {
+                            //  Inactive site
+                            pixel.MapCode.Value = 999;
+                        }
+                        outputRaster.WriteBufferPixel();
+                    }
+                }
+            }
+            //Write additional outputs
+            if (pSIMapNameTemplate != null)
+            {
+                path = MapNames.ReplaceTemplateVars(pSIMapNameTemplate, ModelCore.CurrentTime);
+                using (IOutputRaster<IntPixel> outputRaster = ModelCore.CreateRaster<IntPixel>(path, dimensions))
+                {
+                    IntPixel pixel = outputRaster.BufferPixel;
+                    foreach (Site site in ModelCore.Landscape.AllSites)
+                    {
+                        if (site.IsActive)
+                        {
+                            pixel.MapCode.Value = (int)(Math.Round(SiteVars.Avg_pSI[site] * 100));
+                        }
+                        else
+                        {
+                            //  Inactive site
+                            pixel.MapCode.Value = 999;
+                        }
+                        outputRaster.WriteBufferPixel();
+                    }
+                }
+            }
+            //Write additional outputs
+            if (pIDMapNameTemplate != null)
+            {
+                path = MapNames.ReplaceTemplateVars(pIDMapNameTemplate, ModelCore.CurrentTime);
+                using (IOutputRaster<IntPixel> outputRaster = ModelCore.CreateRaster<IntPixel>(path, dimensions))
+                {
+                    IntPixel pixel = outputRaster.BufferPixel;
+                    foreach (Site site in ModelCore.Landscape.AllSites)
+                    {
+                        if (site.IsActive)
+                        {
+                            pixel.MapCode.Value = (int)(Math.Round(SiteVars.Avg_pID[site] * 100));
+                        }
+                        else
+                        {
+                            //  Inactive site
+                            pixel.MapCode.Value = 999;
+                        }
+                        outputRaster.WriteBufferPixel();
+                    }
+                }
+            }
         }
         private static float Calc_pID(IInputParameters parameters, ActiveSite site)
         {

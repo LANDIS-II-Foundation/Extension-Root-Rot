@@ -43,7 +43,7 @@ namespace Landis.Extension.RootRot
         [DataFieldAttribute(Unit = FieldUnits.g_B_m2, Desc = "Biomass Removed")]
         public int MortalityBiomass { set; get; }
 
-        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Absent")]
+        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Landscape Proportion Absent")]
         public float Absent { set; get; }
     }
 

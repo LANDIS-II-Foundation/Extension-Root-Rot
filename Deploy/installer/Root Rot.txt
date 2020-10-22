@@ -1,7 +1,7 @@
 LandisData   Extension
 
 Name         "Root Rot"
-Version      "0.4 (beta release 2)"
+Version      "0.4 (beta release 3)"
 Type         disturbance:rootrot
 Assembly     Landis.Extension.RootRot
 Class        Landis.Extension.RootRot.PlugIn

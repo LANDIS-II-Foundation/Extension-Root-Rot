@@ -48,9 +48,13 @@ PhMax		250	<<units=pressure head
 MinProbID	0.10
 MaxProbDI	0.85
 
-OutputMapName	"RootRot/RootRot-{timestep}.img"
-TOLPMapName	"RootRot/TOLP-{timestep}.img"
+OutputMapName		"RootRot/RootRot-{timestep}.img"
+TOLPMapName		"RootRot/TOLP-{timestep}.img"
 LethalTempMapName	"RootRot/LethalTemp-{timestep}.img"
+SoilTempMapName		"RootRot/SoilTemp-{timestep}.img"
+WetnessIndexMapName	"RootRot/WetnessIndex-{timestep}.img"
+pUIMapName		"RootRot/pUI-{timestep}.img"
+pIDMapName		"RootRot/pID-{timestep}.img"
 TotalBiomassRemovedMapName  "RootRot/BiomassRemoved-{timestep}.img"
 SpeciesBiomassRemovedMapName  "RootRot/BiomassRemoved-{species}-{timestep}.img"
 

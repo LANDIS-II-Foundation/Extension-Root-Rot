@@ -18,7 +18,11 @@ namespace Landis.Extension.RootRot
         private static ISiteVar<int> totalBiomassRemoved;
         private static ISiteVar<Dictionary<ISpecies,int>> speciesBiomassRemoved;
         private static ISiteVar<SortedList<float,float>[]> monthlySoilTemp;
+        private static ISiteVar<float> avgSoilTemp;
         private static ISiteVar<float> fieldCapacity;
+        private static ISiteVar<float> avg_pSI;
+        private static ISiteVar<float> avg_WetnessIndex;
+        private static ISiteVar<float> avg_pID;
 
         //---------------------------------------------------------------------
         public static void Initialize(string inputMapName)
@@ -26,6 +30,10 @@ namespace Landis.Extension.RootRot
             status = PlugIn.ModelCore.Landscape.NewSiteVar<int>(0);
             lethalTemp = PlugIn.ModelCore.Landscape.NewSiteVar<int>();
             totalBiomassRemoved = PlugIn.ModelCore.Landscape.NewSiteVar<int>(0);
+            avgSoilTemp = PlugIn.ModelCore.Landscape.NewSiteVar<float>();
+            avg_WetnessIndex = PlugIn.ModelCore.Landscape.NewSiteVar<float>();
+            avg_pSI = PlugIn.ModelCore.Landscape.NewSiteVar<float>();
+            avg_pID = PlugIn.ModelCore.Landscape.NewSiteVar<float>();
             speciesBiomassRemoved = PlugIn.ModelCore.Landscape.NewSiteVar < Dictionary<ISpecies, int>>();
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape.ActiveSites)
                 speciesBiomassRemoved[site] = new Dictionary<ISpecies, int>();
@@ -147,6 +155,38 @@ namespace Landis.Extension.RootRot
             get
             {
                 return monthlySoilTemp;
+            }
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<float> AvgSoilTemp
+        {
+            get
+            {
+                return avgSoilTemp;
+            }
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<float> Avg_pSI
+        {
+            get
+            {
+                return avg_pSI;
+            }
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<float> Avg_WetnessIndex
+        {
+            get
+            {
+                return avg_WetnessIndex;
+            }
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<float> Avg_pID
+        {
+            get
+            {
+                return avg_pID;
             }
         }
         //---------------------------------------------------------------------

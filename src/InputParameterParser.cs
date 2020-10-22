@@ -124,6 +124,30 @@ namespace Landis.Extension.RootRot
             else
                 parameters.LethalTempMapNameTemplate = null;
 
+            InputVar<string> soilTempMapName = new InputVar<string>("SoilTempMapName");
+            if (ReadOptionalVar(soilTempMapName))
+                parameters.SoilTempMapNameTemplate = soilTempMapName.Value;
+            else
+                parameters.SoilTempMapNameTemplate = null;
+
+            InputVar<string> wetnessIndexMapName = new InputVar<string>("WetnessIndexMapName");
+            if (ReadOptionalVar(wetnessIndexMapName))
+                parameters.WetnessIndexMapNameTemplate = wetnessIndexMapName.Value;
+            else
+                parameters.WetnessIndexMapNameTemplate = null;
+
+            InputVar<string> pSIMapName = new InputVar<string>("pUIMapName");
+            if (ReadOptionalVar(pSIMapName))
+                parameters.PSIMapNameTemplate = pSIMapName.Value;
+            else
+                parameters.PSIMapNameTemplate = null;
+
+            InputVar<string> pIDMapName = new InputVar<string>("pIDMapName");
+            if (ReadOptionalVar(pIDMapName))
+                parameters.PIDMapNameTemplate = pIDMapName.Value;
+            else
+                parameters.PIDMapNameTemplate = null;
+
             InputVar<string> totalBiomassRemovedMapName = new InputVar<string>("TotalBiomassRemovedMapName");
             if (ReadOptionalVar(totalBiomassRemovedMapName))
                 parameters.TotalBiomassRemovedMapNameTemplate = totalBiomassRemovedMapName.Value;

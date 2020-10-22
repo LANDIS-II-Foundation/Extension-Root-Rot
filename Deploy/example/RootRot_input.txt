@@ -10,9 +10,11 @@ pinustro	0.5	0.05
 pinubank	0.5	0.05
 pinuresi	0.5	0.05
 
-LethalTemp	-24
-PhWet		30
-PhDry		150
+LethalTemp	-30
+MinSoilTemp	10 	<<degrees C
+SoilTempDepth	0.10	<< meters
+PhWet		51
+PhDry		102
 PhMax		250
 MinProbID	0.10
 MaxProbDI	0.85
