@@ -19,7 +19,7 @@ namespace Landis.Extension.RootRot
         private float minProbID;
         private float maxProbDI;
         private string outMapNamesTemplate;
-        private string tolpMapNamesTemplate;
+        private string toldMapNamesTemplate;
         private string lethalTempMapNameTemplate;
         private string totalBiomassRemovedMapNameTemplate;
         private string speciesBiomassRemovedMapNamesTemplate;
@@ -162,15 +162,15 @@ namespace Landis.Extension.RootRot
         /// <summary>
         /// Template for the filenames for Time of Last Pathogen output maps.
         /// </summary>
-        public string TOLPMapNamesTemplate
+        public string TOLDMapNamesTemplate
         {
             get
-            { return tolpMapNamesTemplate; }
+            { return toldMapNamesTemplate; }
             set
             {
                 //if (value == null)
                 //    throw new InputValueException(value.ToString(), "Value must be a file path.");
-                tolpMapNamesTemplate = value;
+                toldMapNamesTemplate = value;
             }
         }
         //---------------------------------------------------------------------
@@ -409,7 +409,7 @@ namespace Landis.Extension.RootRot
         /// <summary>
         /// Template for the filenames for Time of Last Pathogen output maps.
         /// </summary>
-        string TOLPMapNamesTemplate { get; set; }
+        string TOLDMapNamesTemplate { get; set; }
         //---------------------------------------------------------------------
         /// <summary>
         /// Template for the filenames for Lethal Temp output maps.

@@ -112,11 +112,11 @@ namespace Landis.Extension.RootRot
             else
                 parameters.OutMapNamesTemplate = null;
 
-            InputVar<string> tolpMapName = new InputVar<string>("TOLPMapName");
-            if (ReadOptionalVar(tolpMapName))
-                parameters.TOLPMapNamesTemplate = tolpMapName.Value;
+            InputVar<string> toldMapName = new InputVar<string>("TOLDMapName");
+            if (ReadOptionalVar(toldMapName))
+                parameters.TOLDMapNamesTemplate = toldMapName.Value;
             else
-                parameters.TOLPMapNamesTemplate = null;
+                parameters.TOLDMapNamesTemplate = null;
 
             InputVar<string> lethalTempMapName = new InputVar<string>("LethalTempMapName");
             if (ReadOptionalVar(lethalTempMapName))

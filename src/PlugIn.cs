@@ -29,7 +29,7 @@ namespace Landis.Extension.RootRot
         public static readonly string ExtensionName = "Root Rot";
         
         private string outMapNameTemplate;
-        private string tolpMapNameTemplate;
+        private string toldMapNameTemplate;
         private string lethalTempMapNameTemplate;
         private string totalBiomassRemovedMapNameTemplate;
         private string speciesBiomassRemovedMapNameTemplate;
@@ -85,7 +85,7 @@ namespace Landis.Extension.RootRot
 
             Timestep = Parameters.Timestep;
             outMapNameTemplate = Parameters.OutMapNamesTemplate;
-            tolpMapNameTemplate = Parameters.TOLPMapNamesTemplate;
+            toldMapNameTemplate = Parameters.TOLDMapNamesTemplate;
             lethalTempMapNameTemplate = Parameters.LethalTempMapNameTemplate;
             totalBiomassRemovedMapNameTemplate = Parameters.TotalBiomassRemovedMapNameTemplate;
             speciesBiomassRemovedMapNameTemplate = Parameters.SpeciesBiomassRemovedMapNamesTemplate;
@@ -345,9 +345,9 @@ namespace Landis.Extension.RootRot
                 }
             }
             //  Write Time of Last Pathogen map
-            if (tolpMapNameTemplate != null)
+            if (toldMapNameTemplate != null)
             {             
-                path = MapNames.ReplaceTemplateVars(tolpMapNameTemplate, ModelCore.CurrentTime);
+                path = MapNames.ReplaceTemplateVars(toldMapNameTemplate, ModelCore.CurrentTime);
                 using (IOutputRaster<IntPixel> outputRaster = ModelCore.CreateRaster<IntPixel>(path, dimensions))
                 {
                     IntPixel pixel = outputRaster.BufferPixel;
