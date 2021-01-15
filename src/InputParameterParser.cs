@@ -82,9 +82,10 @@ namespace Landis.Extension.RootRot
             ReadVar(minSoilTemp);
             parameters.MinSoilTemp = minSoilTemp.Value;
 
-            InputVar<float> soilTDepth = new InputVar<float>("SoilTempDepth");
-            ReadVar(soilTDepth);
-            parameters.SoilTDepth = soilTDepth.Value;
+            //InputVar<float> soilTDepth = new InputVar<float>("SoilTempDepth");
+            //ReadVar(soilTDepth);
+            //parameters.SoilTDepth = soilTDepth.Value;
+            parameters.SoilTDepth = 0.10F;  // Set to 0.10m (10cm)
             
             InputVar<float> phWet = new InputVar<float>("PhWet");
             ReadVar(phWet);

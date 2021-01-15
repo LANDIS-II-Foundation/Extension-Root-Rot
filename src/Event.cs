@@ -16,6 +16,7 @@ namespace Landis.Extension.RootRot
         public int BiomassRemoved;
         public List<int> BiomassRemovedList;
         public int CohortsKilled;
+        public int UninfectedSites;
         public int InfectedSites;
         public int DiseasedSites;
         public float Absent;
@@ -49,6 +50,7 @@ namespace Landis.Extension.RootRot
             }
             this.CohortsKilled = 0;
             this.TotalSitesDamaged = 0;
+            this.UninfectedSites = 0;
             this.InfectedSites = 0;
             this.DiseasedSites = 0;
             this.Absent = 0;

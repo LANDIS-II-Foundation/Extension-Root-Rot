@@ -300,9 +300,15 @@ namespace Landis.Extension.RootRot
                         }
                     }
                 }
-                if (newStatus == 2) // Infected
+                if (newStatus == 1) // Uninfected
+                {
+                    newEvent.UninfectedSites += 1;
+                }
+                else if (newStatus == 2) // Infected
+                {
                     newEvent.InfectedSites += 1;
-                if (newStatus == 3) // Diseased - can cause damage
+                }
+                else if (newStatus == 3) // Diseased - can cause damage
                 {
                     newEvent.DiseasedSites += 1;
                     int damage = SiteVars.Cohorts[site].ReduceOrKillBiomassCohorts(newEvent);
@@ -315,7 +321,7 @@ namespace Landis.Extension.RootRot
 
                 SiteVars.Status[site] = newStatus;
             }
-            newEvent.Absent = (float) lethalTempSites / (float) PlugIn.ModelCore.Landscape.ActiveSiteCount;
+            newEvent.Absent = (float) lethalTempSites;
             // Write logs
             LogEvent(PlugIn.ModelCore.CurrentTime, newEvent);
 
@@ -578,13 +584,15 @@ namespace Landis.Extension.RootRot
             summaryLog.Clear();
             SummaryLog sl = new SummaryLog();
             sl.Time = currentTime;
-            sl.InfectedSites = diseaseEvent.InfectedSites;
-            sl.DiseasedSites = diseaseEvent.DiseasedSites;
-            sl.DamageSites = diseaseEvent.TotalSitesDamaged;
+            sl.UninfectedSites = (float)diseaseEvent.UninfectedSites / (float)PlugIn.ModelCore.Landscape.ActiveSiteCount;
+            sl.InfectedSites = (float)diseaseEvent.InfectedSites / (float)PlugIn.ModelCore.Landscape.ActiveSiteCount;
+            sl.DiseasedSites = (float)diseaseEvent.DiseasedSites / (float)PlugIn.ModelCore.Landscape.ActiveSiteCount;
+            sl.DamageSites = (float)diseaseEvent.TotalSitesDamaged / (float)PlugIn.ModelCore.Landscape.ActiveSiteCount;
+            sl.Absent = (float)diseaseEvent.Absent / (float)PlugIn.ModelCore.Landscape.ActiveSiteCount;
             sl.CohortsDamaged = diseaseEvent.CohortsDamaged;
             sl.CohortsKilled = diseaseEvent.CohortsKilled;
             sl.MortalityBiomass = diseaseEvent.BiomassRemoved;
-            sl.Absent = diseaseEvent.Absent;
+            
 
             summaryLog.AddObject(sl);
             summaryLog.WriteToFile();

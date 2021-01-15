@@ -25,14 +25,20 @@ namespace Landis.Extension.RootRot
         [DataFieldAttribute(Unit = FieldUnits.Year, Desc = "...")]
         public int Time { set; get; }
 
-        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Sites Infected")]
-        public int InfectedSites { set; get; }
+        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Sites UnInfected")]
+        public float UninfectedSites { set; get; }
 
+        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Sites Infected")]
+        public float InfectedSites { set; get; }
+        
         [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Sites Diseased")]
-        public int DiseasedSites { set; get; }
+        public float DiseasedSites { set; get; }
 
         [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Sites Damaged")]
-        public int DamageSites { set; get; }
+        public float DamageSites { set; get; }
+
+        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Sites Cold Killed")]
+        public float Absent { set; get; }
 
         [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Number of Cohorts Damaged")]
         public int CohortsDamaged { set; get; }
@@ -43,8 +49,7 @@ namespace Landis.Extension.RootRot
         [DataFieldAttribute(Unit = FieldUnits.g_B_m2, Desc = "Biomass Removed")]
         public int MortalityBiomass { set; get; }
 
-        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Landscape Proportion Absent")]
-        public float Absent { set; get; }
+        
     }
 
     /*public class EventTable<EventLog>

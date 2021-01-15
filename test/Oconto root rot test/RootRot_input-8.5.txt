@@ -41,7 +41,7 @@ ulmuamer	0.0	0.0
 
 LethalTemp	-30	<<degrees C
 MinSoilTemp	10 	<<degrees C
-SoilTempDepth	0.10	<< meters
+>>SoilTempDepth	0.10	<< meters
 PhWet		51	<<units=pressure head
 PhDry		102	<<units=pressure head
 PhMax		250	<<units=pressure head
@@ -49,7 +49,7 @@ MinProbID	0.10
 MaxProbDI	0.85
 
 OutputMapName		"RootRot/RootRot-{timestep}.img"
-TOLPMapName		"RootRot/TOLP-{timestep}.img"
+TOLDMapName		"RootRot/TOLD-{timestep}.img"
 LethalTempMapName	"RootRot/LethalTemp-{timestep}.img"
 SoilTempMapName		"RootRot/SoilTemp-{timestep}.img"
 WetnessIndexMapName	"RootRot/WetnessIndex-{timestep}.img"
