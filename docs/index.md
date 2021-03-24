@@ -1,37 +1,44 @@
-## Welcome to GitHub Pages
+# What is the Root Rot Extension?
 
-You can use the [editor on GitHub](https://github.com/LANDIS-II-Foundation/Extension-Root-Rot/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+Root Rot simulates tree cohort mortality due to root rot disease caused by Phytophora cinnamomi.  It is compatible with the PnET-Succession extension.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+# Release Notes
 
-### Markdown
+- Upcoming official release: Version 1.0 — TBD 2021
+- [View User Guide](https://github.com/LANDIS-II-Foundation/Extension-Root-Rot/blob/master/Docs/LANDIS-II%20Root%20Rot%20v1.0%20User%20Guide.pdf).
+- Full release details found in the User Guide and on GitHub.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+# Requirements
 
-```markdown
-Syntax highlighted code block
+To use Root Rot you need:
 
-# Header 1
-## Header 2
-### Header 3
+- The [LANDIS-II model v7.0](http://www.landis-ii.org/install) installed on your computer.
+- The [PnET-Succession extension](http://www.landis-ii.org/extensions/pnet-succession) installed.
+- Example files (see below)
 
-- Bulleted
-- List
+# Download
 
-1. Numbered
-2. List
+Version 1.0 is not yet available for download.  To recieve a beta-version of the extension contact Brian Miranda (brian.r.miranda@usda.gov).
 
-**Bold** and _Italic_ and `Code` text
+# Example Files
 
-[Link](url) and ![Image](src)
-```
+LANDIS-II requires a global parameter file for your scenario, and separate parameter files for each extension.
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Example files are [here](https://github.com/LANDIS-II-Foundation/Extension-Root-Rot/blob/master/test/example/Root-rot-example.zip).
 
-### Jekyll Themes
+# Citation
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/LANDIS-II-Foundation/Extension-Root-Rot/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Gustafson, E. J., B. R. Miranda, T. J. Dreaden, C. C. Pinchot and D. F. Jacobs. In Review. Beyond blight: Phytophthora root rot under climate change limits populations of reintroduced American chestnut.
 
-### Support or Contact
+# Support
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+If you have a question, please contact Brian Miranda. 
+You can also ask for help in the [LANDIS-II users group](http://www.landis-ii.org/users).
+
+If you come across any issue or suspected bug, please post about it in the [issue section of the Github repository](https://github.com/LANDIS-II-Foundation/Extension-Root-Rot/issues) (GitID required).
+
+# Authors
+
+Brian R. Miranda, Eric J. Gustafson, Tyler J. Dreaden
+
+Mail : brian.r.miranda@usda.gov
