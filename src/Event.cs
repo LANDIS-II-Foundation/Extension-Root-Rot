@@ -59,17 +59,21 @@ namespace Landis.Extension.RootRot
         //  A filter to determine which cohorts are removed.
         int IDisturbance.ReduceOrKillMarkedCohort(ICohort cohort)
         {
-            float[] speciesSusceptList = PlugIn.Parameters.SusceptibilityTable[cohort.Species];
             float speciesSuscept = 0;
-            if (cohort.Age >= PlugIn.ModelCore.CurrentTime - SiteVars.TimeOfLastDisease[this.currentSite])
+            if (PlugIn.Parameters.SusceptibilityTable.ContainsKey(cohort.Species))
             {
-                // Reinfection a second (or more) time used 2nd value in speciesSusceptList
-                speciesSuscept = speciesSusceptList[1];
-            }
-            else
-            {
-                // First time infected uses 1st value in speciesSusceptList
-                speciesSuscept = speciesSusceptList[0];
+                float[] speciesSusceptList = PlugIn.Parameters.SusceptibilityTable[cohort.Species];
+
+                if (cohort.Age >= PlugIn.ModelCore.CurrentTime - SiteVars.TimeOfLastDisease[this.currentSite])
+                {
+                    // Reinfection a second (or more) time used 2nd value in speciesSusceptList
+                    speciesSuscept = speciesSusceptList[1];
+                }
+                else
+                {
+                    // First time infected uses 1st value in speciesSusceptList
+                    speciesSuscept = speciesSusceptList[0];
+                }
             }
             if (speciesSuscept > 0)
             {                

@@ -164,7 +164,11 @@ namespace Landis.Extension.RootRot
                             {
                                 foreach (ICohort cohort in speciesCohorts)
                                 {
-                                    float speciesSuscept = Parameters.SusceptibilityTable[cohort.Species][0];
+                                    float speciesSuscept = 0f;
+                                    if (PlugIn.Parameters.SusceptibilityTable.ContainsKey(cohort.Species))
+                                    {
+                                        speciesSuscept = Parameters.SusceptibilityTable[cohort.Species][0];
+                                    }
                                     if (speciesSuscept > maxSusceptibility)
                                     {
                                         maxSusceptibility = speciesSuscept;
