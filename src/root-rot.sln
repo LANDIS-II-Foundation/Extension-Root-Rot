@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extension_Admin", "..\..\br
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PnET-Succession", "..\..\Extension-PnET-Succession\src\PnET-Succession.csproj", "{166CF27B-CB41-43B9-A07F-3EAF16A6C433}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "output-biomass-pnet", "..\..\Extension-Output-Biomass-PnET\src\output-biomass-pnet.csproj", "{2C64FF63-0510-4CDF-ADB0-FFCC5795050C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,14 @@ Global
 		{166CF27B-CB41-43B9-A07F-3EAF16A6C433}.Release|Any CPU.Build.0 = Release|Any CPU
 		{166CF27B-CB41-43B9-A07F-3EAF16A6C433}.Release|x64.ActiveCfg = Release|Any CPU
 		{166CF27B-CB41-43B9-A07F-3EAF16A6C433}.Release|x64.Build.0 = Release|Any CPU
+		{2C64FF63-0510-4CDF-ADB0-FFCC5795050C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C64FF63-0510-4CDF-ADB0-FFCC5795050C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C64FF63-0510-4CDF-ADB0-FFCC5795050C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2C64FF63-0510-4CDF-ADB0-FFCC5795050C}.Debug|x64.Build.0 = Debug|Any CPU
+		{2C64FF63-0510-4CDF-ADB0-FFCC5795050C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C64FF63-0510-4CDF-ADB0-FFCC5795050C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C64FF63-0510-4CDF-ADB0-FFCC5795050C}.Release|x64.ActiveCfg = Release|Any CPU
+		{2C64FF63-0510-4CDF-ADB0-FFCC5795050C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
