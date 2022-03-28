@@ -12,7 +12,6 @@ pinuresi	0.5	0.05
 
 LethalTemp	-30
 MinSoilTemp	10 	<<degrees C
-SoilTempDepth	0.10	<< meters
 PhWet		51
 PhDry		102
 PhMax		250
@@ -20,7 +19,7 @@ MinProbID	0.10
 MaxProbDI	0.85
 
 OutputMapName	"RootRot/RootRot-{timestep}.img"
-TOLPMapName	"RootRot/TOLP-{timestep).img"
+TOLDMapName	"RootRot/TOLD-{timestep).img"
 
 EventLog	"RootRot/RootRot-events.csv"
 SummaryLog	"RootRot/RootRot-summary.csv"
