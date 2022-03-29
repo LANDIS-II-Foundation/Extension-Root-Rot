@@ -13,12 +13,12 @@ Root Rot simulates tree cohort mortality due to root rot disease caused by Phyto
 To use Root Rot you need:
 
 - The [LANDIS-II model v7.0](http://www.landis-ii.org/install) installed on your computer.
-- The [PnET-Succession extension v4.1+](http://www.landis-ii.org/extensions/pnet-succession) installed.
+- The [PnET-Succession extension v4.1+](https://landis-ii-foundation.github.io/Extension-PnET-Succession/) installed.
 - Example files (see below)
 
 # Download
 
-Version 1.0 can be downloaded [here](https://github.com/LANDIS-II-Foundation/Extension-Root-Rot/raw/master/Deploy/installer/LANDIS-II-V7%20Root%20Rot%201.0-setup.exe).  To install it on your computer, launch the installer.
+Version 1.0 can be downloaded [here](https://github.com/LANDIS-II-Foundation/Extension-Root-Rot/blob/master/Deploy/installer/LANDIS-II-V7%20Root%20Rot%201.0-RC1-setup.exe).  To install it on your computer, launch the installer.
 
 # Example Files
 
