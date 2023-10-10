@@ -1,0 +1,9 @@
+LandisData   Extension
+
+Name         "Root Rot v1.1"
+Version      "1.1 (beta 1)"
+Type         disturbance:rootrot
+Assembly     Landis.Extension.RootRot-v1.1
+Class        Landis.Extension.RootRot.PlugIn
+Description  "Root Rot"
+CoreVersion  7.0

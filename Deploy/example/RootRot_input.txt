@@ -19,7 +19,7 @@ MinProbID	0.10
 MaxProbDI	0.85
 
 OutputMapName	"RootRot/RootRot-{timestep}.img"
-TOLDMapName	"RootRot/TOLD-{timestep).img"
+TOLDMapName	"RootRot/TOLD-{timestep}.img"
 
 EventLog	"RootRot/RootRot-events.csv"
 SummaryLog	"RootRot/RootRot-summary.csv"
